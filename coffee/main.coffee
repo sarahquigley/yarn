@@ -29,14 +29,14 @@ class Parser
 
 
 window.test_nodes =
-  start: 'Hello! I am the first node. Go to the [second] one.'
+  start: 'Hello! I am the first node. Go to the [second] one. Or the [third] one.'
   second: 'Hi! Second node here. Go to the [third]!'
   third: "That's all folks."
 
 
 class DebugParser extends Parser
   compile_edges: (nodes) ->
-    brace_regex = /\[[^[]+\]/
+    brace_regex = /\[[^[]+\]/g
     edges = []
     _.each nodes, (text, source_node_id) ->
       dest_node_ids = _.map text.match(brace_regex), (link) ->
