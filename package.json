@@ -1,8 +1,7 @@
 {
-  "name": "angular-skeleton",
-  "description": "Angular Skeleton",
+  "name": "yarn",
+  "description": "Yarn Story Engine",
   "version": "0.0.0",
-  "homepage": "https://github.com/mstewart/angular-skeleton",
   "private": false,
   "devDependencies": {
     "bower": "~1.3.12",
