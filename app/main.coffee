@@ -41,4 +41,14 @@ class DebugParser extends Parser
 
     return edges
 
+  compile_page: (nodes) ->
+    page = ''
+    for title, text of nodes
+      node_template = """
+                      <h1><%- title %></h1>
+                      <p><%- text %></p>
+                      """
+      page += _.template(node_template)(title: title, text: text)
+    return page
+
 window.DebugParser = DebugParser
