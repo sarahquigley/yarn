@@ -1,7 +1,5 @@
-
-
 class Edge
-  constructor: (@source, @dest) ->
+  constructor: (@source, @destination) ->
 
 class Graph
   constructor: (@nodes = {}, @edges = {}) ->
@@ -10,12 +8,15 @@ class Graph
     # @nodes: dict of {node_id: node_text}
     # @edges: [Edge]
 
+  edges_by_node: (node_id) ->
+    return _.where(@edges, {source: node_id})
+
 
 class Parser
   compile_graph: (nodes) ->
     # Parses the nodes to figure out what the set of edges is,
     # and returns a graph of the nodes + edges.
-    edges = compile_edges(nodes)
+    edges = @compile_edges(nodes)
     return new Graph(nodes, edges)
 
   compile_page: (nodes) ->

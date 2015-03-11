@@ -6,11 +6,18 @@
     <!-- endbower -->
   </head>
 
-  <body>
-    <div>
+  <body ng-app="EditorApp">
+    <div ng-controller="EditorCtrl as editor">
       <h1>Hello!</h1>
       <p>Welcome to angular skeleton.</p>
+      <div ng-repeat="(title, text) in graph.nodes">
+        <h2><a name="{{ title }}">{{ title }}</a></h2>
+        <p>{{ text }}</h2>
+        <div ng-repeat="edge in graph.edges_by_node(title)">
+          <a href="#{{ edge.destination }}">{{ edge.destination }}</p></a>
+      </div>
     </div>
+
     <!-- bower:js -->
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/angular/angular.js"></script>
