@@ -28,13 +28,6 @@ class Parser
   compile_edges: (nodes) ->
     throw 'NotImplementedError'
 
-
-window.test_nodes =
-  start: 'Hello! I am the first node. Go to the [second] one. Or the [third] one.'
-  second: 'Hi! Second node here. Go to the [third]!'
-  third: "That's all folks."
-
-
 class DebugParser extends Parser
   compile_edges: (nodes) ->
     brace_regex = /\[[^[]+\]/g

@@ -1,4 +1,4 @@
-angular.module('EditorApp', [
+angular.module('DebugEditorApp', [
   'xeditable'
 ])
 
@@ -6,19 +6,33 @@ angular.module('EditorApp', [
   editableOptions.theme = 'bs3'
 )
 
-.service('Parser', DebugParser)
+.service('DebugParser', DebugParser)
 
 .factory('_', () -> return _)
 
-.controller('EditorCtrl', ['$scope', '_', 'Parser', ($scope, _, Parser) ->
-  $scope.test_nodes =
-    start: 'Hello! I am the first node. Go to the [second] one. Or the [third] one.'
-    second: 'Hi! Second node here. Go to the [third]!'
-    third: "That's all folks. [fourth]"
-    fourth: "Except it isn't really. [fifth]"
-    fifth: "Maybe now it is all. [sixth]"
-    sixth: "Maybe now it is all. [seventh]"
-    seventh: 'Foo.'
+.controller('DebugEditorCtrl', ['$scope', '_', 'DebugParser', ($scope, _, DebugParser) ->
+  $scope.nodes = {}
 
-  $scope.graph = Parser.compile_graph($scope.test_nodes)
+  $scope.update_node_text = (node_id, node_text) ->
+    $scope.nodes[node_id] = node_text
+    return true
+
+  $scope.update_node_id = (node_id, new_node_id) ->
+    return 'Node with this title already exists.' if _.isString($scope.nodes[new_node_id])
+    $scope.nodes[new_node_id] = $scope.nodes[node_id]
+    delete $scope.nodes[node_id]
+    return true
+
+  $scope.add_node = (node_id, text) ->
+    if _.isString($scope.nodes[node_id])
+      alert('Node with this title already exists.')
+      return false
+    $scope.nodes[node_id] = text
+    $scope.new_node = {}
+
+  $scope.graph = DebugParser.compile_graph($scope.nodes)
+
+  $scope.$watch('nodes', () ->
+    $scope.graph = DebugParser.compile_graph($scope.nodes)
+  , true)
 ])
