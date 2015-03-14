@@ -8,6 +8,7 @@ module.exports = function(config){
       // bower:js
       'app/bower_components/lodash/lodash.js',
       'app/bower_components/angular/angular.js',
+      'app/bower_components/angular-xeditable/dist/js/xeditable.js',
       // endbower
       '.dev/main.js',
       'app/**.spec.coffee',
