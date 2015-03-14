@@ -1,4 +1,10 @@
-angular.module('EditorApp', [])
+angular.module('EditorApp', [
+  'xeditable'
+])
+
+.run((editableOptions) ->
+  editableOptions.theme = 'bs3'
+)
 
 .service('Parser', DebugParser)
 

@@ -3,6 +3,8 @@
 <html>
   <head>
     <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <!-- endbower -->
   </head>
 
@@ -11,16 +13,20 @@
       <h1>Hello!</h1>
       <p>Welcome to angular skeleton.</p>
       <div ng-repeat="(title, text) in graph.nodes">
-        <h2><a name="{{ title }}">{{ title }}</a></h2>
-        <p>{{ text }}</h2>
+        <h2><a name="{{ title }}" editable-text="title">{{ title }}</a></h2>
+        <p><a href="#" editable-text="text">{{ text }}</a></h2>
         <div ng-repeat="edge in graph.edges_by_node(title)">
           <a href="#{{ edge.destination }}">{{ edge.destination }}</p></a>
+        </div>
       </div>
     </div>
 
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!-- endbower -->
 
     <script type="text/javascript" src="main.js"></script>
