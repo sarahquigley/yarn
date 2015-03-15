@@ -51,4 +51,5 @@ class DebugParser extends Parser
       page += _.template(node_template)(title: title, text: text)
     return page
 
+window.Edge = Edge
 window.DebugParser = DebugParser
