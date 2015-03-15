@@ -123,7 +123,7 @@ module.exports = function(grunt) {
 
       wiredep: {
         files: ['bower.json'],
-        tasks: ['wiredep:dev']
+        tasks: ['wiredep:dev', 'wiredep:test']
       }
     },
 
