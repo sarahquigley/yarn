@@ -73,7 +73,7 @@ describe 'DebugEditorApp', ->
           $scope.add_node('test_node', 'test')
           expect($scope.nodes.test_node).toEqual('test')
 
-      describe 'if a node with the node_id of the new node does not exist', ->
+      describe 'if a node with the node_id of the new node exists', ->
         beforeEach ->
           $scope.nodes = {test_node: 'test'}
           spyOn(window, 'alert')
