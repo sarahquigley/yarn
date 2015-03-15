@@ -52,4 +52,5 @@ class DebugParser extends Parser
     return page
 
 window.Edge = Edge
+window.Graph = Graph
 window.DebugParser = DebugParser
