@@ -5,14 +5,14 @@ describe 'DebugEditorApp', ->
 
   describe 'DebugEditorCtrl', ->
 
-    DebugParser = undefined
     $scope = undefined
+    DebugParser = undefined
 
     beforeEach ->
       # Create mock DebugParser
       DebugParser = jasmine.createSpyObj('DebugParser', ['compile_graph'])
       DebugParser.compile_graph.and.callFake((nodes) ->
-        return {nodes: nodes}
+        return new Graph(nodes, [])
       )
 
       # Make DebugEditorCtrl's $scope available for testing 
@@ -31,12 +31,12 @@ describe 'DebugEditorApp', ->
 
     it 'should define a $scope variable, $scope.graph, to equal result of DebugParser.compile_graph of $scope.nodes', ->
       expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
-      expect($scope.graph).toEqual({nodes: $scope.nodes})
+      expect($scope.graph.nodes).toEqual($scope.nodes)
 
-    it 'should watch $scope variable, $scope.nodes, and reset $scope.graph to result of DebugParser.compile_graph of $scope.nodes', ->
+    it 'should watch $scope.nodes and set $scope.graph to result of DebugParser.compile_graph of $scope.nodes when $scope.nodes change', ->
       $scope.nodes.test_node = 'test'
       expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
-      expect($scope.graph).toEqual(nodes: $scope.nodes)
+      expect($scope.graph.nodes).toEqual($scope.nodes)
     
     describe '.update_node_text', ->
       it 'should update the text of the specified node', ->
