@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script>
+      (function() {
+        var storyHtml = localStorage.getItem('yarnStory');
+        window.onload = function() {
+          document.documentElement.innerHTML = storyHtml;
+        }
+      })();
+    </script>
+  </head>
+
+  <body></body>
+</html>
