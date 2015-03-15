@@ -41,4 +41,5 @@ class DebugParser extends Parser
 
     return edges
 
+window.Graph = Graph
 window.DebugParser = DebugParser
