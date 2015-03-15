@@ -8,15 +8,18 @@ angular.module('DebugEditorApp', [
 
 .service('DebugParser', DebugParser)
 
-.factory('_', () -> return _)
+.factory('localStorage', -> localStorage)
+.factory('_', -> return _)
 
-.controller('DebugEditorCtrl', ['$scope', '_', 'DebugParser', ($scope, _, DebugParser) ->
+.controller('DebugEditorCtrl',
+['$scope', '$window', '_', 'DebugParser', 'localStorage',
+($scope, $window, _, DebugParser, localStorage) ->
   # Load nodes from localStorage if present; otherwise, start with empty nodes.
   try
     parsed_nodes = JSON.parse(localStorage.getItem('yarnNodes'))
   catch error
     parsed_nodes = undefined
-    console.log(error)
+    console.log('Error deserializing nodes from localStorage: ' + error)
   $scope.nodes = parsed_nodes || {}
 
   $scope.update_node_text = (node_id, node_text) ->
@@ -38,8 +41,7 @@ angular.module('DebugEditorApp', [
 
   $scope.graph = DebugParser.compile_graph($scope.nodes)
 
-  $scope.$watch('nodes',
-    () ->
+  $scope.$watch('nodes', ->
       $scope.graph = DebugParser.compile_graph($scope.nodes)
     , true)
 
@@ -51,7 +53,7 @@ angular.module('DebugEditorApp', [
 
   $scope.launch_story = ->
     $scope.save_story()
-    window.open('/play.html')
+    $window.open('/play.html')
 
   $scope.new_story = ->
     $scope.nodes = {}
