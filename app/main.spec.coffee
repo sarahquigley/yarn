@@ -10,7 +10,7 @@ describe 'Debug Parser', ->
       page = new DebugParser().compile_page(TEST_NODES)
       expect(page).toContain(TEST_NODES['start'])
 
-  describe '#compile_edges', ->
+  describe '#compile_graph', ->
     it 'should parse out both links from the start node', ->
       graph = new DebugParser().compile_graph(TEST_NODES)
       edges = graph.edges_by_node('start')
