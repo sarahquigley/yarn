@@ -13,6 +13,7 @@ module.exports = function(config){
       'app/bower_components/bootstrap/dist/js/bootstrap.js',
       // endbower
       'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/mock-localstorage/lib/mock-localstorage.js',
       '.dev/main.js',
       'app/**/*.spec.coffee',
     ],
