@@ -39,10 +39,6 @@ describe 'DebugEditorApp', ->
           })
       )
 
-    it 'should define a $scope variable, $scope.nodes', ->
-      setUp()
-      expect($scope.nodes).toEqual(jasmine.any(Object))
-
     describe 'if yarnNodes key is set in localStorage', ->
       beforeEach ->
         localStorage.setItem('yarnNodes', JSON.stringify({test_node: 'test'}))
@@ -51,25 +47,25 @@ describe 'DebugEditorApp', ->
       it 'should initialise $scope.nodes to its value', ->
         expect($scope.nodes).toEqual({test_node: 'test'})
 
-    describe 'if yarnNodes key is not set in localStorage', ->
-      it 'should initialise $scope.nodes to an empty object', ->
-        setUp()
-        expect($scope.nodes).toEqual({})
-
-    it 'should define a $scope variable, $scope.graph, to equal result of DebugParser.compile_graph of $scope.nodes', ->
-      setUp()
-      expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
-      expect($scope.graph.nodes).toEqual($scope.nodes)
-
-    it 'should watch $scope.nodes and set $scope.graph to result of DebugParser.compile_graph of $scope.nodes when $scope.nodes change', ->
-      setUp()
-      $scope.nodes.test_node = 'test'
-      expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
-      expect($scope.graph.nodes).toEqual($scope.nodes)
-
-    describe '$scope methods', ->
+    describe 'set up DebugEditorCtrl', ->
       beforeEach ->
         setUp()
+
+      it 'should define a $scope variable, $scope.nodes', ->
+        expect($scope.nodes).toEqual(jasmine.any(Object))
+
+      describe 'if yarnNodes key is not set in localStorage', ->
+        it 'should initialise $scope.nodes to an empty object', ->
+          expect($scope.nodes).toEqual({})
+
+      it 'should define a $scope variable, $scope.graph, to equal result of DebugParser.compile_graph of $scope.nodes', ->
+        expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
+        expect($scope.graph.nodes).toEqual($scope.nodes)
+
+      it 'should watch $scope.nodes and set $scope.graph to result of DebugParser.compile_graph of $scope.nodes when $scope.nodes change', ->
+        $scope.nodes.test_node = 'test'
+        expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
+        expect($scope.graph.nodes).toEqual($scope.nodes)
 
       describe '.update_node_text', ->
         it 'should update the text of the specified node', ->
