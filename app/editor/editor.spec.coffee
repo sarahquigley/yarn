@@ -9,7 +9,7 @@ describe 'DebugEditorApp', ->
     DebugParser = undefined
     localStorage = undefined
     $window = undefined
-    setUp = undefined
+    setUpDebugEditorCtrl = undefined
 
     beforeEach ->
       # Mock DebugParser
@@ -18,18 +18,19 @@ describe 'DebugEditorApp', ->
         return new Graph(nodes, [])
       )
       DebugParser.compile_page.and.callFake((nodes) ->
-        return '<code>' + JSON.stringify(nodes) + '<code>'
+        return '<code>' + JSON.stringify(nodes) + '</code>'
       )
       # Mock localStorage
       localStorage = new MockLocalStorage()
+
       # Mock $window
       $window = jasmine.createSpyObj('$window', ['open'])
 
-      # Make DebugEditorCtrl's $scope available for testing
-      inject(($rootScope, $controller, _) ->
-        $scope = $rootScope.$new()
+      # setUp method to make DebugEditorCtrl's $scope available for testing
+      setUpDebugEditorCtrl = ->
+        inject(($rootScope, $controller, _) ->
+          $scope = $rootScope.$new()
 
-        setUp = ->
           $controller('DebugEditorCtrl', {
             $scope: $scope,
             $window: $window,
@@ -42,21 +43,17 @@ describe 'DebugEditorApp', ->
     describe 'if yarnNodes key is set in localStorage', ->
       beforeEach ->
         localStorage.setItem('yarnNodes', JSON.stringify({test_node: 'test'}))
-        setUp()
+        setUpDebugEditorCtrl()
 
       it 'should initialise $scope.nodes to its value', ->
         expect($scope.nodes).toEqual({test_node: 'test'})
 
-    describe 'set up DebugEditorCtrl', ->
+    describe 'if yarnNodes key is not set in localStorage', ->
       beforeEach ->
-        setUp()
+        setUpDebugEditorCtrl()
 
-      it 'should define a $scope variable, $scope.nodes', ->
-        expect($scope.nodes).toEqual(jasmine.any(Object))
-
-      describe 'if yarnNodes key is not set in localStorage', ->
-        it 'should initialise $scope.nodes to an empty object', ->
-          expect($scope.nodes).toEqual({})
+      it 'should initialise $scope.nodes to an empty object', ->
+        expect($scope.nodes).toEqual({})
 
       it 'should define a $scope variable, $scope.graph, to equal result of DebugParser.compile_graph of $scope.nodes', ->
         expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.nodes)
@@ -85,7 +82,6 @@ describe 'DebugEditorApp', ->
           result = undefined
 
           beforeEach ->
-            setUp()
             $scope.nodes = {test_node: 'test', test_node_2: 'test2'}
             result = $scope.update_node_id('test_node_2', 'test_node')
 
