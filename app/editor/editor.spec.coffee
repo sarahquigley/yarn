@@ -15,7 +15,7 @@ describe 'DebugEditorApp', ->
       # Mock DebugParser
       DebugParser = jasmine.createSpyObj('DebugParser', ['compile_graph', 'compile_page'])
       DebugParser.compile_graph.and.callFake((nodes) ->
-        return new Graph(nodes, [])
+        return new Yarn.Graph(nodes, [])
       )
       DebugParser.compile_page.and.callFake((nodes) ->
         return '<code>' + JSON.stringify(nodes) + '</code>'
