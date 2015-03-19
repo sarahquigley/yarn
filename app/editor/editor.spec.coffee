@@ -41,12 +41,14 @@ describe 'DebugEditorApp', ->
       )
 
     describe 'if yarnNodes key is set in localStorage', ->
+      TEST_NODES = {test_node: 'test'}
+
       beforeEach ->
-        localStorage.setItem('yarnNodes', JSON.stringify({test_node: 'test'}))
+        localStorage.setItem('yarnNodes', JSON.stringify(TEST_NODES))
         setUpDebugEditorCtrl()
 
       it 'should initialise $scope.nodes to its value', ->
-        expect($scope.nodes).toEqual({test_node: 'test'})
+        expect($scope.nodes).toEqual(TEST_NODES)
 
     describe 'if yarnNodes key is not set in localStorage', ->
       beforeEach ->
