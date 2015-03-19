@@ -6,7 +6,7 @@ angular.module('DebugEditorApp', [
   editableOptions.theme = 'bs3'
 )
 
-.service('DebugParser', DebugParser)
+.service('DebugParser', Yarn.DebugParser)
 
 .factory('localStorage', -> localStorage)
 .factory('_', -> return _)

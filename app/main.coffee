@@ -51,6 +51,8 @@ class DebugParser extends Parser
       page += _.template(node_template)(title: title, text: text)
     return page
 
-window.Edge = Edge
-window.Graph = Graph
-window.DebugParser = DebugParser
+this.Yarn = {
+  Edge: Edge,
+  Graph: Graph,
+  DebugParser: DebugParser
+}

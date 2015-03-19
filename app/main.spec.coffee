@@ -1,5 +1,7 @@
-
 describe 'Debug Parser', ->
+  DebugParser = Yarn.DebugParser
+  Edge = Yarn.Edge
+
   TEST_NODES =
     start: 'Hello! I am the first node. Go to the [second] one. Or the [third] one.'
     second: 'Hi! Second node here. Go to the [third]!'
