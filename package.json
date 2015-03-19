@@ -27,6 +27,7 @@
     "karma-mocha-reporter": "~1.0.0",
     "karma-ng-html2js-preprocessor": "^0.1.2",
     "load-grunt-tasks": "~3.1.0",
+    "mock-localstorage": "^0.1.0",
     "time-grunt": "~1.1.0"
   },
   "scripts": {
