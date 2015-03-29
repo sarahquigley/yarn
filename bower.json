@@ -12,6 +12,7 @@
     "angular": "~1.3.x",
     "angular-xeditable": "~0.1.8",
     "bootstrap": "~3.3.2",
-    "jquery": "2.1.x"
+    "jquery": "2.1.x",
+    "undermore": "~1.8.5"
   }
 }
