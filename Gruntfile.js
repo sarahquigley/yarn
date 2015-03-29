@@ -179,6 +179,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'wiredep:test',
       'clean:dev',
+      'jison-parser',
       'coffee:dev',
       'karma:single'
     ]);
@@ -197,6 +198,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:dev',
       'coffee:dev',
+      'jison-parser',
       'wiredep:dev',
       'connect:livereload'
     ]);
@@ -218,6 +220,6 @@ module.exports = function(grunt) {
   grunt.registerTask('jison-parser', function() {
     var grammar = grunt.file.readJSON('grammar-file.json');
     var parser = new jison.Parser(grammar);
-    grunt.file.write('output-parser.js', parser.generate());
+    grunt.file.write('.dev/parser.js', parser.generate());
   });
 };
