@@ -1,7 +1,7 @@
 DebugParser = new window.Yarn.DebugParser()
 
 class DebugStory
-  constructor: (@id = 'yarn-' + _.uuid(), @nodes = {}) ->
+  constructor: (@id = 'yarn-' + _.uuid(), @title = 'New Story', @nodes = {}) ->
 
   _contains: (node_id) ->
     return _.contains(_.keys(@nodes), node_id)
@@ -12,6 +12,9 @@ class DebugStory
       return false
     @nodes[node_id] = text
     return true
+
+  update_title: (title) ->
+    @title = title
 
   update_node_text: (node_id, node_text) ->
     @nodes[node_id] = node_text
@@ -27,10 +30,10 @@ class DebugStory
     return true
 
   to_json: () ->
-   return {nodes: @nodes}
+   return {title: @title, nodes: @nodes}
 
   @from_json: (id, json_object) ->
-    return new DebugStory(id, json_object.nodes)
+    return new DebugStory(id, json_object.title, json_object.nodes)
 
 
 class StoryStorage
