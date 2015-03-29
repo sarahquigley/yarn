@@ -13,54 +13,80 @@
     <div ng-controller="DebugEditorCtrl as debugEditor" class="container">
 
       <h1>Yarn Debug Editor</h1>
-      <p>Add a node. Edit a node.</p>
+      <p>Choose a story. Make a new story. Add a node. Edit a node.</p>
 
-      <div>
-        <form>
+      <div ng-if="story_ids.length > 0">
+        <form ng-submit="edit_story(chosen_story_id)" >
           <div class="form-group">
-            <input ng-model="new_node.node_id" class="form-control" placeholder="Node title"/>
+            <select class="form-control" required
+              ng-options="story_id for story_id in story_ids" ng-model="chosen_story_id">
+              <option value="">Choose a story</option>
+            </select>
           </div>
-          <div class="form-group">
-            <textarea ng-model="new_node.text" class="form-control" placeholder="Node text"></textarea>
-          </div>
-          <button type="submit" ng-click="add_node(new_node.node_id, new_node.text)" class="btn btn-primary">Add A Node</button>
+          <button type="submit" class="btn btn-primary"
+            ng-disabled="!chosen_story_id">
+            Load Story
+          </button>
         </form>
       </div>
 
-      <div ng-repeat="(node_id, text) in nodes" class="row">
-
-        <div class="col-xs-12">
-          <h2>
-            <a name="{{ node_id }}" editable-text="node_id" onbeforesave="update_node_id(node_id, $data)">
-              {{ node_id }}
-            </a>
-          </h2>
-          <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="update_node_text(node_id, $data)">
-            <pre>{{ text }}</pre>
-          </a>
-        </div>
-
-        <div ng-repeat="edge in graph.edges_by_node(node_id)" class="col-xs-12">
-          Edges:
-          <a href="#{{ edge.destination }}">{{ edge.destination }}</a>
-        </div>
-
+      <div>
+        <button type="button" class="btn btn-primary"
+          ng-click="new_story()">
+          New Story
+        </button>
+        <button type="button" class="btn btn-primary"
+          ng-click="clear_stories()">
+          Clear Stories
+        </button>
       </div>
 
-      <button type="submit" class="btn btn-primary"
-          ng-click="save_story()">
-        Save
-      </button>
+      <div>
+        <h1>Editing {{ story.id }}</h1>
 
-      <button type="submit" class="btn btn-primary"
-          ng-click="launch_story()">
-        Play Story
-      </button>
+        <div>
+          <form>
+            <div class="form-group">
+              <input class="form-control" placeholder="Node title" ng-model="new_node.node_id" required/>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" placeholder="Node text" ng-model="new_node.text"></textarea>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Add A Node"
+              ng-click="add_node_to_story(new_node.node_id, new_node.text)" ng-disabled="!new_node.node_id"/>
+          </form>
+        </div>
 
-      <button type="submit" class="btn btn-primary"
-          ng-click="new_story()">
-        Clear Story
-      </button>
+        <div ng-repeat="(node_id, text) in story.nodes" class="row">
+
+          <div class="col-xs-12">
+            <h2>
+              <a name="{{ node_id }}" editable-text="node_id" onbeforesave="story.update_node_id(node_id, $data)">
+                {{ node_id }}
+              </a>
+            </h2>
+            <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="story.update_node_text(node_id, $data)">
+              <pre>{{ text }}</pre>
+            </a>
+          </div>
+
+          <div class="col-xs-12" ng-repeat="edge in graph.edges_by_node(node_id)">
+            Edges:
+            <a href="#{{ edge.destination }}">{{ edge.destination }}</a>
+          </div>
+
+        </div>
+
+        <button type="button" class="btn btn-primary"
+            ng-click="save_story()">
+          Save
+        </button>
+
+        <button type="button" class="btn btn-primary"
+            ng-click="launch_story()">
+          Play Story
+        </button>
+      </div>
 
     </div>
 

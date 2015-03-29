@@ -12,50 +12,59 @@ angular.module('DebugEditorApp', [
 
 .factory('_', -> _)
 
+.factory('DebugStory', -> DebugStory)
+
+.factory('StoryStorage', ['localStorage', (localStorage) ->
+  return new StoryStorage(localStorage)
+])
+
 .controller('DebugEditorCtrl',
-['$scope', '$window', '_', 'DebugParser', 'localStorage',
-($scope, $window, _, DebugParser, localStorage) ->
-  # Load nodes from localStorage if present; otherwise, start with empty nodes.
-  try
-    parsed_nodes = JSON.parse(localStorage.getItem('yarnNodes'))
-  catch error
-    parsed_nodes = undefined
-    console.log('Error deserializing nodes from localStorage: ' + error)
-  $scope.nodes = parsed_nodes || {}
+['$scope', '$window', '_', 'DebugParser', 'localStorage', 'DebugStory', 'StoryStorage',
+($scope, $window, _, DebugParser, localStorage, DebugStory, StoryStorage) ->
 
-  $scope.update_node_text = (node_id, node_text) ->
-    $scope.nodes[node_id] = node_text
-    return true
+  # Set story_ids
+  $scope.story_ids = StoryStorage.story_ids()
 
-  $scope.update_node_id = (node_id, new_node_id) ->
-    return 'Node with this title already exists.' if _.isString($scope.nodes[new_node_id])
-    $scope.nodes[new_node_id] = $scope.nodes[node_id]
-    delete $scope.nodes[node_id]
-    return true
-
-  $scope.add_node = (node_id, text) ->
-    if _.isString($scope.nodes[node_id])
-      alert('Node with this title already exists.')
-      return false
-    $scope.nodes[node_id] = text
-    $scope.new_node = {}
-
-  $scope.graph = DebugParser.compile_graph($scope.nodes)
-
-  $scope.$watch('nodes', ->
-      $scope.graph = DebugParser.compile_graph($scope.nodes)
-    , true)
+  # Debug Editor Methods
+  $scope.edit_story = (id) ->
+    localStorage.setItem('yarn-story-id', id)
+    $scope.story = StoryStorage.load_story(id)
 
   $scope.save_story = ->
-    localStorage.setItem('yarnNodes',
-                         JSON.stringify($scope.nodes))
-    localStorage.setItem('yarnStory',
-                         DebugParser.compile_page($scope.nodes))
+    StoryStorage.save_story($scope.story)
+
+  $scope.new_story = ->
+    $scope.story = new DebugStory()
+    localStorage.setItem('yarn-story-id', $scope.story.id)
+    $scope.save_story()
+    $scope.chosen_story_id = $scope.story.id
+    $scope.story_ids = StoryStorage.story_ids()
+
+  $scope.add_node_to_story = (node_id, node_text='') ->
+    added_node = $scope.story.add_node(node_id, node_text)
+    $scope.new_node = {} if added_node
 
   $scope.launch_story = ->
     $scope.save_story()
     $window.open('/play.html')
 
-  $scope.new_story = ->
-    $scope.nodes = {}
+  $scope.clear_stories = ->
+    StoryStorage.clear()
+    $scope.new_story()
+
+  # Load current story_id from localStorage if present; otherwise create a new story_id
+  story_id = localStorage.getItem('yarn-story-id')
+
+  if story_id
+    $scope.story = StoryStorage.load_story(story_id)
+    $scope.chosen_story_id = $scope.story.id
+  else
+    console.log('Could not get current story_id from localStorage.')
+    $scope.new_story()
+
+  $scope.graph = DebugParser.compile_graph($scope.story.nodes)
+
+  $scope.$watch('nodes', ->
+      $scope.graph = DebugParser.compile_graph($scope.story.nodes)
+    , true)
 ])
