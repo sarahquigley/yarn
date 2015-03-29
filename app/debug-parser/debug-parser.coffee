@@ -3,11 +3,14 @@ Parser = Yarn.Parser
 
 class DebugParser extends Parser
   compile_edges: (nodes) ->
-    brace_regex = /\[[^[]+\]/g
     edges = []
     _.each nodes, (text, source_node_id) ->
-      dest_node_ids = _.map text.match(brace_regex), (link) ->
-        _.trim(link, '[]')
+      node_components = YarnDebugStoryParser.parse(text)
+
+      dest_node_ids = _(node_components)
+        .where(type: 'link')
+        .pluck('value')
+        .value()
 
       for dest_node_id in dest_node_ids
         edges.push(new Edge(source_node_id, dest_node_id))
