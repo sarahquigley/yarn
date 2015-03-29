@@ -14,8 +14,8 @@ module.exports = function(grunt) {
     files: {
       scripts: [
         '<%= config.dirs.app %>/main.coffee',
-        '<%= config.dirs.app %>/editor/editor.coffee',
         '<%= config.dirs.app %>/debug-parser/debug-parser.coffee',
+        '<%= config.dirs.app %>/editor/editor.coffee',
       ],
       tests: [
         '<%= config.dirs.app %>/**/*.spec.coffee'
