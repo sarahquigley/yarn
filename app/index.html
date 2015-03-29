@@ -42,7 +42,12 @@
       </div>
 
       <div>
-        <h1>Editing {{ story.title }} - {{ story.id }}</h1>
+        <h1>
+          Editing:
+          <a name="{{ story.title }}" editable-text="story.title" onbeforesave="story.update_title($data)">
+            {{ story.title }}
+          </a>
+        </h1>
 
         <div>
           <form>
