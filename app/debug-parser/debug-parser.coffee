@@ -18,17 +18,26 @@ class DebugParser extends Parser
     return edges
 
   compile_page: (nodes) ->
-    page = ''
+    page = """
+    <script>
+    function navigateTo(node_title) {
+      $('.node').hide();
+      $('#' + node_title).show();
+    };
+
+    $(function() { navigateTo('start'); });
+    </script>
+    """
     for title, text of nodes
       items = YarnDebugStoryParser.parse(text)
 
       node_template = """
-                      <div id="<%- title %>">
+                      <div class="node" id="<%- title %>">
                         <h1><%- title %></h1>
                         <p><% 
                           _.forEach(items, function(item) {
                             if (item.type == 'link') {
-                              %><a href="#"><%- item.value %></a><%
+                              %><a href="javascript:navigateTo('<%- item.value %>');"><%- item.value %></a><%
                             } else {
                               %><%- item.value %><%
                             }
