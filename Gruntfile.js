@@ -220,6 +220,8 @@ module.exports = function(grunt) {
   grunt.registerTask('jison-parser', function() {
     var grammar = grunt.file.readJSON('grammar-file.json');
     var parser = new jison.Parser(grammar);
-    grunt.file.write('.dev/parser.js', parser.generate());
+    grunt.file.write(
+      '.dev/generated_parser.js',
+      parser.generate({moduleName: 'YarnDebugStoryParser'}));
   });
 };
