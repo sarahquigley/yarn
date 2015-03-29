@@ -156,9 +156,10 @@ module.exports = function(grunt) {
       target: {
         options: {
           moduleType: 'js',
+          moduleName: 'YarnDebugStoryParser',
         },
         files: {
-          'generated-parser.js': 'grammar-file.json',
+          '.dev/generated_parser.js': 'grammar-file.jison',
         },
       },
     },
@@ -179,7 +180,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'wiredep:test',
       'clean:dev',
-      'jison-parser',
+      'jison',
       'coffee:dev',
       'karma:single'
     ]);
@@ -198,7 +199,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:dev',
       'coffee:dev',
-      'jison-parser',
+      'jison',
       'wiredep:dev',
       'connect:livereload'
     ]);
@@ -216,12 +217,12 @@ module.exports = function(grunt) {
   // default task   - run by grunt when no task is specified
   grunt.registerTask('default', 'serve');
 
-  var jison = require('jison');
-  grunt.registerTask('jison-parser', function() {
-    var grammar = grunt.file.readJSON('grammar-file.json');
-    var parser = new jison.Parser(grammar);
-    grunt.file.write(
-      '.dev/generated_parser.js',
-      parser.generate({moduleName: 'YarnDebugStoryParser'}));
-  });
+  //var jison = require('jison');
+  //grunt.registerTask('jison-parser', function() {
+    //var grammar = grunt.file.readJSON('grammar-file.json');
+    //var parser = new jison.Parser(grammar);
+    //grunt.file.write(
+      //'.dev/generated_parser.js',
+      //parser.generate({moduleName: 'YarnDebugStoryParser'}));
+  //});
 };
