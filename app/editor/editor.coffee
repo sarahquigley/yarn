@@ -9,7 +9,8 @@ angular.module('DebugEditorApp', [
 .service('DebugParser', Yarn.DebugParser)
 
 .factory('localStorage', -> localStorage)
-.factory('_', -> return _)
+
+.factory('_', -> _)
 
 .controller('DebugEditorCtrl',
 ['$scope', '$window', '_', 'DebugParser', 'localStorage',
