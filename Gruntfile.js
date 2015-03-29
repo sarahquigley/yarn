@@ -150,7 +150,18 @@ module.exports = function(grunt) {
           }
         }
       }
-    }
+    },
+
+    jison: {
+      target: {
+        options: {
+          moduleType: 'js',
+        },
+        files: {
+          'generated-parser.js': 'grammar-file.json',
+        },
+      },
+    },
 
   });
 
@@ -202,4 +213,11 @@ module.exports = function(grunt) {
 
   // default task   - run by grunt when no task is specified
   grunt.registerTask('default', 'serve');
+
+  var jison = require('jison');
+  grunt.registerTask('jison-parser', function() {
+    var grammar = grunt.file.readJSON('grammar-file.json');
+    var parser = new jison.Parser(grammar);
+    grunt.file.write('output-parser.js', parser.generate());
+  });
 };
