@@ -20,11 +20,23 @@ class DebugParser extends Parser
   compile_page: (nodes) ->
     page = ''
     for title, text of nodes
+      items = YarnDebugStoryParser.parse(text)
+
       node_template = """
-                      <h1><%- title %></h1>
-                      <p><%- text %></p>
+                      <div id="<%- title %>">
+                        <h1><%- title %></h1>
+                        <p><% 
+                          _.forEach(items, function(item) {
+                            if (item.type == 'link') {
+                              %><a href="#"><%- item.value %></a><%
+                            } else {
+                              %><%- item.value %><%
+                            }
+                          });
+                        %></p>
+                      </div>
                       """
-      page += _.template(node_template)(title: title, text: text)
+      page += _.template(node_template)(title: title, items: items)
     return page
 
 this.Yarn.DebugParser = DebugParser
