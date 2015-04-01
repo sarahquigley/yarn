@@ -15,20 +15,14 @@
       <h1>Yarn Debug Editor</h1>
       <p>Choose a story. Make a new story. Add a node. Edit a node.</p>
 
-      <div ng-if="story_ids.length > 0">
-        <form ng-submit="edit_story(chosen_story_id)" >
-          <div class="form-group">
-            <select class="form-control" required
-              ng-options="story_id for story_id in story_ids" ng-model="chosen_story_id">
-              <option value="">Choose a story</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary"
-            ng-disabled="!chosen_story_id">
-            Load Story
-          </button>
-        </form>
+      <div>
+        <h2>Choose a story</h2>
+        <select class="form-control" required
+          ng-options="_story.title for (id, _story) in stories" ng-model="story">
+        </select>
       </div>
+
+      <br/>
 
       <div>
         <button type="button" class="btn btn-primary"
@@ -41,13 +35,29 @@
         </button>
       </div>
 
+      <hr/>
+
       <div>
-        <h1>
+        <h2>
           Editing:
           <a name="{{ story.title }}" editable-text="story.title" onbeforesave="story.update_title($data)">
             {{ story.title }}
           </a>
-        </h1>
+        </h2>
+
+        <div>
+          <button type="button" class="btn btn-primary"
+              ng-click="save_story()">
+            Save
+          </button>
+
+          <button type="button" class="btn btn-primary"
+              ng-click="launch_story()">
+            Play Story
+          </button>
+        </div>
+
+        <br/>
 
         <div>
           <form>
@@ -65,11 +75,11 @@
         <div ng-repeat="(node_id, text) in story.nodes" class="row">
 
           <div class="col-xs-12">
-            <h2>
+            <h3>
               <a name="{{ node_id }}" editable-text="node_id" onbeforesave="story.update_node_id(node_id, $data)">
                 {{ node_id }}
               </a>
-            </h2>
+            </h3>
             <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="story.update_node_text(node_id, $data)">
               <pre>{{ text }}</pre>
             </a>
@@ -81,16 +91,6 @@
           </div>
 
         </div>
-
-        <button type="button" class="btn btn-primary"
-            ng-click="save_story()">
-          Save
-        </button>
-
-        <button type="button" class="btn btn-primary"
-            ng-click="launch_story()">
-          Play Story
-        </button>
       </div>
 
     </div>
