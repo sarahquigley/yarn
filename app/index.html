@@ -16,7 +16,7 @@
       <p>Choose a story. Make a new story. Add a node. Edit a node.</p>
 
       <div>
-        <h2>Choose a story</h2>
+        <h2>Choose a story:</h2>
         <select class="form-control" required
           ng-options="_story.title for (id, _story) in stories" ng-model="story">
         </select>
@@ -39,7 +39,7 @@
 
       <div>
         <h2>
-          Editing:
+          Editing story:
           <a name="{{ story.title }}" editable-text="story.title" onbeforesave="story.update_title($data)">
             {{ story.title }}
           </a>
@@ -47,13 +47,8 @@
 
         <div>
           <button type="button" class="btn btn-primary"
-              ng-click="save_story()">
-            Save
-          </button>
-
-          <button type="button" class="btn btn-primary"
               ng-click="launch_story()">
-            Play Story
+            Play
           </button>
         </div>
 
@@ -72,9 +67,13 @@
           </form>
         </div>
 
-        <div ng-repeat="(node_id, text) in story.nodes" class="row">
+        <hr/>
 
-          <div class="col-xs-12">
+        <div ng-repeat="(node_id, text) in story.nodes">
+
+          <h2>Edit story nodes:</h2>
+
+          <div>
             <h3>
               <a name="{{ node_id }}" editable-text="node_id" onbeforesave="story.update_node_id(node_id, $data)">
                 {{ node_id }}
@@ -85,7 +84,7 @@
             </a>
           </div>
 
-          <div class="col-xs-12" ng-repeat="edge in graph.edges_by_node(node_id)">
+          <div ng-repeat="edge in graph.edges_by_node(node_id)">
             Edges:
             <a href="#{{ edge.destination }}">{{ edge.destination }}</a>
           </div>

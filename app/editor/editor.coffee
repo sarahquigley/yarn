@@ -23,14 +23,9 @@ angular.module('DebugEditorApp', [
 ($scope, $window, _, DebugParser, localStorage, DebugStory, StoryStorage) ->
 
   # Debug Editor Methods
-  $scope.save_story = ->
-    StoryStorage.save_story($scope.story)
-    localStorage.setItem('yarn-story-id', $scope.story.id)
-
   $scope.new_story = ->
     $scope.story = new DebugStory()
     localStorage.setItem('yarn-story-id', $scope.story.id)
-    $scope.save_story()
     $scope.stories[$scope.story.id] = $scope.story
 
   $scope.add_node_to_story = (node_id, node_text='') ->
@@ -38,7 +33,6 @@ angular.module('DebugEditorApp', [
     $scope.new_node = {} if added_node
 
   $scope.launch_story = ->
-    $scope.save_story()
     $window.open('/play.html')
 
   $scope.clear_stories = ->
@@ -46,6 +40,7 @@ angular.module('DebugEditorApp', [
     StoryStorage.clear()
     $scope.new_story()
 
+  # Load all stories
   $scope.stories = StoryStorage.stories()
 
   # Load current story_id from localStorage if present; otherwise create a new story_id
@@ -60,7 +55,9 @@ angular.module('DebugEditorApp', [
   # Debug Editor Graph
   $scope.graph = DebugParser.compile_graph($scope.story.nodes)
 
-  $scope.$watch('story.nodes', ->
+  $scope.$watch('story', ->
+      StoryStorage.save_story($scope.story)
+      localStorage.setItem('yarn-story-id', $scope.story.id)
       $scope.graph = DebugParser.compile_graph($scope.story.nodes)
     , true)
 ])
