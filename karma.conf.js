@@ -12,6 +12,7 @@ module.exports = function(config){
       'app/bower_components/angular-xeditable/dist/js/xeditable.js',
       'app/bower_components/bootstrap/dist/js/bootstrap.js',
       'app/bower_components/undermore/bin/undermore.js',
+      'app/bower_components/angular-route/angular-route.js',
       // endbower
       'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/mock-localstorage/lib/mock-localstorage.js',

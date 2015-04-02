@@ -1,26 +1,42 @@
 angular.module('DebugEditorApp', [
-  'xeditable'
+  'xeditable',
+  'ngRoute'
 ])
 
 .run((editableOptions) ->
   editableOptions.theme = 'bs3'
 )
 
-.service('DebugParser', Yarn.DebugParser)
+.config(['$routeProvider', ($routeProvider) ->
+  $routeProvider
+  .when('/stories', {
+    templateUrl: 'editor/editor.html',
+    controller: 'DebugEditorCtrl'
+  })
+  .when('/stories/:id', {
+    templateUrl: 'editor/editor.html',
+    controller: 'DebugEditorCtrl'
+  })
+  .otherwise({
+    redirectTo: '/stories'
+  })
+])
 
 .factory('localStorage', -> localStorage)
 
 .factory('_', -> _)
 
+.service('DebugParser', Yarn.DebugParser)
+
 .factory('DebugStory', -> DebugStory)
 
-.factory('StoryStorage', ['localStorage', (localStorage) ->
-  return new StoryStorage(localStorage)
+.factory('DebugStoryStorage', ['localStorage', (localStorage) ->
+  return new DebugStoryStorage(localStorage)
 ])
 
 .controller('DebugEditorCtrl',
-['$scope', '$window', '_', 'DebugParser', 'localStorage', 'DebugStory', 'StoryStorage',
-($scope, $window, _, DebugParser, localStorage, DebugStory, StoryStorage) ->
+['$scope', '$window', '$routeParams', '_', 'DebugParser', 'localStorage', 'DebugStory', 'DebugStoryStorage',
+($scope, $window, $routeParams, _, DebugParser, localStorage, DebugStory, DebugStoryStorage) ->
 
   # Debug Editor Methods
   $scope.new_story = ->
@@ -37,11 +53,11 @@ angular.module('DebugEditorApp', [
 
   $scope.clear_stories = ->
     $scope.stories = {}
-    StoryStorage.clear()
+    DebugStoryStorage.clear()
     $scope.new_story()
 
   # Load all stories
-  $scope.stories = StoryStorage.stories()
+  $scope.stories = DebugStoryStorage.stories()
 
   # Load current story_id from localStorage if present; otherwise create a new story_id
   story_id = localStorage.getItem('yarn-story-id')
@@ -56,7 +72,7 @@ angular.module('DebugEditorApp', [
   $scope.graph = DebugParser.compile_graph($scope.story.nodes)
 
   $scope.$watch('story', ->
-      StoryStorage.save_story($scope.story)
+      DebugStoryStorage.save_story($scope.story)
       localStorage.setItem('yarn-story-id', $scope.story.id)
       $scope.graph = DebugParser.compile_graph($scope.story.nodes)
     , true)

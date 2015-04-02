@@ -40,7 +40,7 @@ class DebugStory
     return new DebugStory(id, json_object.title, json_object.nodes)
 
 
-class StoryStorage
+class DebugStoryStorage
   constructor: (@storage) ->
 
   # Public Methods
@@ -72,4 +72,4 @@ class StoryStorage
     return DebugStory.from_json(id, json_object)
 
 window.DebugStory = DebugStory
-window.StoryStorage = StoryStorage
+window.DebugStoryStorage = DebugStoryStorage

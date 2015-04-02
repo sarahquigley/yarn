@@ -1,0 +1,83 @@
+<div class="container">
+
+  <h1>Yarn Debug Editor</h1>
+  <p>Choose a story. Make a new story. Add a node. Edit a node.</p>
+
+  <div>
+    <h2>Choose a story:</h2>
+    <select class="form-control" required
+      ng-options="_story.title for (id, _story) in stories" ng-model="story">
+    </select>
+  </div>
+
+  <br/>
+
+  <div>
+    <button type="button" class="btn btn-primary"
+      ng-click="new_story()">
+      New Story
+    </button>
+    <button type="button" class="btn btn-primary"
+      ng-click="clear_stories()">
+      Clear Stories
+    </button>
+  </div>
+
+  <hr/>
+
+  <div>
+    <h2>
+      Editing story:
+      <a name="{{ story.title }}" editable-text="story.title" onbeforesave="story.update_title($data)">
+        {{ story.title }}
+      </a>
+    </h2>
+
+    <div>
+      <button type="button" class="btn btn-primary"
+        ng-click="launch_story()">
+        Play
+      </button>
+    </div>
+
+    <br/>
+
+    <div>
+      <form>
+        <div class="form-group">
+          <input class="form-control" placeholder="Node title" ng-model="new_node.node_id" required/>
+        </div>
+        <div class="form-group">
+          <textarea class="form-control" placeholder="Node text" ng-model="new_node.text"></textarea>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Add A Node"
+        ng-click="add_node_to_story(new_node.node_id, new_node.text)" ng-disabled="!new_node.node_id"/>
+      </form>
+    </div>
+
+    <hr/>
+
+    <div ng-repeat="(node_id, text) in story.nodes">
+
+      <h2>Edit story nodes:</h2>
+
+      <div>
+        <h3>
+          <a name="{{ node_id }}" editable-text="node_id" onbeforesave="story.update_node_id(node_id, $data)">
+            {{ node_id }}
+          </a>
+        </h3>
+        <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="story.update_node_text(node_id, $data)">
+          <pre>{{ text }}</pre>
+        </a>
+      </div>
+
+      <div ng-repeat="edge in graph.edges_by_node(node_id)">
+        Edges:
+        <a href="#{{ edge.destination }}">{{ edge.destination }}</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
