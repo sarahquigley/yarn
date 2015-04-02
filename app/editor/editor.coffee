@@ -49,7 +49,7 @@ angular.module('DebugEditorApp', [
     $scope.new_node = {} if added_node
 
   $scope.launch_story = ->
-    $window.open('/play.html')
+    $window.open('/play.html#' + $scope.story.id)
 
   $scope.clear_stories = ->
     $scope.stories = {}

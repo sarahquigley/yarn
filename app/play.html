@@ -4,7 +4,7 @@
   <head>
     <script>
       (function() {
-        var story_id = localStorage.getItem('yarn-story-id');
+        var story_id = window.location.hash.slice(1);
         var storyHtml = localStorage.getItem(story_id + '-story');
         window.onload = function() {
           document.documentElement.innerHTML = storyHtml;
