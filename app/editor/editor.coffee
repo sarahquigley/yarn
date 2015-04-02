@@ -50,6 +50,7 @@ angular.module('DebugEditorApp', [
 
   $scope.launch_story = ->
     $window.open('/play.html#' + $scope.story.id)
+    return true
 
   $scope.clear_stories = ->
     $scope.stories = {}
