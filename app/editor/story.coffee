@@ -49,7 +49,6 @@ class DebugStoryStorage
       @storage.removeItem(key) if _.startsWith(key, 'yarn-')
 
   save_story: (story) ->
-    @storage.setItem('yarn-story-id', story.id)
     @storage.setItem(story.id, JSON.stringify(story.to_json()))
     @storage.setItem(story.id + '-story', DebugParser.compile_page(story.nodes))
 
@@ -62,7 +61,7 @@ class DebugStoryStorage
   # Private Methods
   _story_ids: ->
     return _.filter _.keys(@storage), (key) ->
-      return _.startsWith(key, 'yarn-') && !_.endsWith(key, '-story') && !_.endsWith(key, 'story-id')
+      return _.startsWith(key, 'yarn-') && !_.endsWith(key, '-story')
 
   _load_story: (id) ->
     try

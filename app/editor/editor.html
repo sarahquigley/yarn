@@ -3,10 +3,11 @@
   <h1>Yarn Debug Editor</h1>
   <p>Choose a story. Make a new story. Add a node. Edit a node.</p>
 
-  <div>
+  <div ng-show="has_stories()">
     <h2>Choose a story:</h2>
     <select class="form-control" required
-      ng-options="_story.title for (id, _story) in stories" ng-model="story">
+      ng-options="_story.title for (id, _story) in stories" ng-model="story" ng-change="go_to_story()">
+      <option value="" disabled>Choose a story</option>
     </select>
   </div>
 
@@ -18,14 +19,14 @@
       New Story
     </button>
     <button type="button" class="btn btn-primary"
-      ng-click="clear_stories()">
+      ng-click="clear_stories()" ng-if="has_stories()">
       Clear Stories
     </button>
   </div>
 
   <hr/>
 
-  <div>
+  <div ng-show="story">
     <h2>
       Editing story:
       <a name="{{ story.title }}" editable-text="story.title" onbeforesave="story.update_title($data)">
@@ -43,7 +44,7 @@
     <br/>
 
     <div>
-      <form>
+      <form name="nodeForm">
         <div class="form-group">
           <input class="form-control" placeholder="Node title" ng-model="new_node.node_id" required/>
         </div>
