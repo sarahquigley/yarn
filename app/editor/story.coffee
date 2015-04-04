@@ -49,6 +49,7 @@ class DebugStoryStorage
       @storage.removeItem(key) if _.startsWith(key, 'yarn-')
 
   save_story: (story) ->
+    @storage.setItem('yarn-story-id', story.id)
     @storage.setItem(story.id, JSON.stringify(story.to_json()))
     @storage.setItem(story.id + '-story', DebugParser.compile_page(story.nodes))
 

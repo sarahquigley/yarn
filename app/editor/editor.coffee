@@ -41,7 +41,6 @@ angular.module('DebugEditorApp', [
   # Debug Editor Methods
   $scope.new_story = ->
     $scope.story = new DebugStory()
-    localStorage.setItem('yarn-story-id', $scope.story.id)
     $scope.stories[$scope.story.id] = $scope.story
 
   $scope.add_node_to_story = (node_id, node_text='') ->
@@ -74,7 +73,6 @@ angular.module('DebugEditorApp', [
 
   $scope.$watch('story', ->
       DebugStoryStorage.save_story($scope.story)
-      localStorage.setItem('yarn-story-id', $scope.story.id)
       $scope.graph = DebugParser.compile_graph($scope.story.nodes)
     , true)
 ])
