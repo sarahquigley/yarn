@@ -75,6 +75,7 @@ angular.module('DebugEditorApp', [
   $scope.has_stories = ->
     return !_.isEmpty($scope.stories)
 
+  # Watch $scope.story
   $scope.$watch('story', ->
       if $scope.story
         DebugStoryStorage.save_story($scope.story)
