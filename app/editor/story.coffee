@@ -65,11 +65,10 @@ class DebugStoryStorage
 
   _load_story: (id) ->
     try
-      json_object = JSON.parse(@storage.getItem(id))
+      return DebugStory.from_json(id,
+        JSON.parse(@storage.getItem(id)))
     catch error
-      json_object = undefined
-      console.log('Error deserializing nodes from localStorage: ' + error)
-    return DebugStory.from_json(id, json_object)
+      throw "Error parsing story with id=#{id}: #{error}\n"
 
 window.DebugStory = DebugStory
 window.DebugStoryStorage = DebugStoryStorage
