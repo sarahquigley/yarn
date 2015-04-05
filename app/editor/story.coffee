@@ -41,7 +41,7 @@ class DebugStory
 
 
 class DebugStoryStorage
-  constructor: (@storage) ->
+  constructor: (@storage, @parser) ->
 
   # Public Methods
   clear: ->
@@ -50,7 +50,7 @@ class DebugStoryStorage
 
   save_story: (story) ->
     @storage.setItem(story.id, JSON.stringify(story.to_json()))
-    @storage.setItem(story.id + '-story', DebugParser.compile_page(story.nodes))
+    @storage.setItem(story.id + '-story', @parser.compile_page(story.nodes))
 
   stories: ->
     stories = {}

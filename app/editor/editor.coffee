@@ -32,8 +32,10 @@ angular.module('DebugEditorApp', [
 
 .factory('DebugStory', -> DebugStory)
 
-.factory('DebugStoryStorage', ['localStorage', (localStorage) ->
-  return new DebugStoryStorage(localStorage)
+.factory('DebugStoryStorage',
+['localStorage', 'DebugParser',
+(localStorage, DebugParser) ->
+  return new DebugStoryStorage(localStorage, DebugParser)
 ])
 
 .controller('DebugEditorCtrl',
