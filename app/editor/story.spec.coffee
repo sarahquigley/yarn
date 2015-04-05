@@ -80,12 +80,17 @@ describe 'DebugStoryStorage', ->
   localStorage = undefined
   story1 = undefined
   story2 = undefined
+  DebugParser = undefined
 
   beforeEach ->
+    DebugParser = jasmine.createSpyObj('DebugParser', ['compile_page'])
+    DebugParser.compile_page.and.callFake((nodes) ->
+      return '<code>' + JSON.stringify(nodes) + '</code>'
+    )
     story1 = new DebugStory()
     story2 = new DebugStory()
     localStorage = new MockLocalStorage()
-    story_storage = new DebugStoryStorage(localStorage)
+    story_storage = new DebugStoryStorage(localStorage, DebugParser)
     localStorage.setItem(story1.id, JSON.stringify(story1.to_json()))
     localStorage.setItem(story2.id, JSON.stringify(story2.to_json()))
 
@@ -113,8 +118,7 @@ describe 'DebugStoryStorage', ->
       expect(localStorage.getItem(story.id)).toEqual(serialized_story)
 
     it 'should save the compiled story to storage with expected reference key', ->
-      parser = new window.Yarn.DebugParser()
-      compiled_story = parser.compile_page(story.nodes)
+      compiled_story = DebugParser.compile_page(story.nodes)
       expect(localStorage.getItem(story.id + '-story')).toEqual(compiled_story)
 
   describe '#stories', ->
