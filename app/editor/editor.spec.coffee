@@ -134,7 +134,7 @@ describe 'DebugEditorApp', ->
           expect($scope.go_to_story).toHaveBeenCalled()
 
         it 'should compile $scope.graph from $scope.story.nodes', ->
-          expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes) 
+          expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
           expect($scope.graph).toEqual(DebugParser.compile_graph())
 
       describe '.clear_stories', ->
@@ -161,3 +161,26 @@ describe 'DebugEditorApp', ->
         it 'should return false if $scope.stories is empty', ->
           $scope.stories = {}
           expect($scope.has_stories()).toBe(false)
+
+      describe 'watches $scope.story', ->
+        describe 'if $scope.story is defined', ->
+          beforeEach ->
+            $scope.$apply()
+
+          it 'should call DebugStoryStorage#save_story', ->
+            expect(DebugStoryStorage.save_story).toHaveBeenCalledWith($scope.story)
+
+          it 'should compile $scope.graph from $scope.story.nodes', ->
+            expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
+            expect($scope.graph).toEqual(DebugParser.compile_graph())
+
+        describe 'if $scope.story is not defined', ->
+          beforeEach ->
+            $scope.story = undefined
+            $scope.$apply()
+
+          it 'should not call DebugStoryStorage#save_story', ->
+            expect(DebugStoryStorage.save_story).not.toHaveBeenCalled()
+
+          it 'should compile $scope.graph from $scope.story.nodes', ->
+            expect(DebugParser.compile_graph).not.toHaveBeenCalled()
