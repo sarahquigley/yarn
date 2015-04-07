@@ -30,20 +30,20 @@ angular.module('DebugEditorApp', [
 
 .service('DebugParser', Yarn.DebugParser)
 
-.factory('DebugStory', -> DebugStory)
+.factory('Story', -> Story)
 
-.factory('DebugStoryStorage',
+.factory('StoryStorage',
 ['localStorage', 'DebugParser',
 (localStorage, DebugParser) ->
-  return new DebugStoryStorage(localStorage, DebugParser)
+  return new StoryStorage(localStorage, DebugParser)
 ])
 
 .controller('DebugEditorCtrl',
-['$scope', '$window', '$routeParams', '$location', '_', 'DebugParser', 'DebugStory', 'DebugStoryStorage',
-($scope, $window, $routeParams, $location, _, DebugParser, DebugStory, DebugStoryStorage) ->
+['$scope', '$window', '$routeParams', '$location', '_', 'DebugParser', 'Story', 'StoryStorage',
+($scope, $window, $routeParams, $location, _, DebugParser, Story, StoryStorage) ->
 
   # Load all stories
-  $scope.stories = DebugStoryStorage.stories()
+  $scope.stories = StoryStorage.stories()
 
   # If viewing a story, set story
   if $routeParams.id
@@ -55,7 +55,7 @@ angular.module('DebugEditorApp', [
     $location.path('/stories/' + story_id)
 
   $scope.new_story = ->
-    $scope.story = new DebugStory()
+    $scope.story = new Story()
     $scope.go_to_story()
     $scope.stories[$scope.story.id] = $scope.story
     $scope.graph = DebugParser.compile_graph($scope.story.nodes)
@@ -75,7 +75,7 @@ angular.module('DebugEditorApp', [
     $scope.stories = {}
     $scope.story = undefined
     $scope.go_to_story()
-    DebugStoryStorage.clear()
+    StoryStorage.clear()
 
   $scope.has_stories = ->
     return !_.isEmpty($scope.stories)
@@ -83,7 +83,7 @@ angular.module('DebugEditorApp', [
   # Watch $scope.story
   $scope.$watch('story', ->
       if $scope.story
-        DebugStoryStorage.save_story($scope.story)
+        StoryStorage.save_story($scope.story)
         $scope.graph = DebugParser.compile_graph($scope.story.nodes)
     , true)
 ])

@@ -13,13 +13,13 @@ describe 'DebugEditorApp', ->
     $routeParams = undefined
     $location = undefined
     DebugParser = undefined
-    DebugStoryStorage = undefined
+    StoryStorage = undefined
     setUpDebugEditorCtrl = undefined
 
     beforeEach ->
       stories = {}
-      story1 = new DebugStory()
-      story2 = new DebugStory()
+      story1 = new Story()
+      story2 = new Story()
       stories[story1.id] = story1
       stories[story2.id] = story2
 
@@ -34,9 +34,9 @@ describe 'DebugEditorApp', ->
         return new Yarn.Graph(nodes, [])
       )
 
-      # Mock DebugStoryStorage
-      DebugStoryStorage = jasmine.createSpyObj('DebugStoryStorage', ['clear', 'stories', 'save_story'])
-      DebugStoryStorage.stories.and.callFake(() ->
+      # Mock StoryStorage
+      StoryStorage = jasmine.createSpyObj('StoryStorage', ['clear', 'stories', 'save_story'])
+      StoryStorage.stories.and.callFake(() ->
         return stories
       )
       
@@ -52,8 +52,8 @@ describe 'DebugEditorApp', ->
             $location: $location,
             _: _,
             DebugParser: DebugParser,
-            DebugStory: DebugStory,
-            DebugStoryStorage: DebugStoryStorage
+            Story: Story,
+            StoryStorage: StoryStorage
           })
         )
 
@@ -67,8 +67,8 @@ describe 'DebugEditorApp', ->
       beforeEach ->
         setUpDebugEditorCtrl()
         
-      it 'should set $scope.stories by calling DebugStoryStorage.stories', ->
-        expect($scope.stories).toEqual(DebugStoryStorage.stories())
+      it 'should set $scope.stories by calling StoryStorage.stories', ->
+        expect($scope.stories).toEqual(StoryStorage.stories())
 
       describe 'if $routeParams.id is defined', ->
         it 'should set $scope.story as expected', ->
@@ -128,9 +128,9 @@ describe 'DebugEditorApp', ->
           spyOn($scope, 'go_to_story')
           $scope.new_story()
 
-        it 'should set $scope.story a new DebugStory', ->
+        it 'should set $scope.story a new Story', ->
           expect($scope.story).not.toEqual(story1)
-          expect($scope.story).toEqual(jasmine.any(DebugStory))
+          expect($scope.story).toEqual(jasmine.any(Story))
 
         it 'should add $scope.story to $scope.stories', ->
           expect(Object.keys($scope.stories).length).toEqual(3)
@@ -157,8 +157,8 @@ describe 'DebugEditorApp', ->
         it 'should call $scope.go_to_story', ->
           expect($scope.go_to_story).toHaveBeenCalled()
 
-        it 'should call DebugStoryStorage#clear', ->
-          expect(DebugStoryStorage.clear).toHaveBeenCalled()
+        it 'should call StoryStorage#clear', ->
+          expect(StoryStorage.clear).toHaveBeenCalled()
 
       describe '.has_stories', ->
         it 'should return true if $scope.stories is not empty', ->
@@ -173,8 +173,8 @@ describe 'DebugEditorApp', ->
           beforeEach ->
             $scope.$apply()
 
-          it 'should call DebugStoryStorage#save_story', ->
-            expect(DebugStoryStorage.save_story).toHaveBeenCalledWith($scope.story)
+          it 'should call StoryStorage#save_story', ->
+            expect(StoryStorage.save_story).toHaveBeenCalledWith($scope.story)
 
           it 'should compile $scope.graph from $scope.story.nodes', ->
             expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
@@ -185,8 +185,8 @@ describe 'DebugEditorApp', ->
             $scope.story = undefined
             $scope.$apply()
 
-          it 'should not call DebugStoryStorage#save_story', ->
-            expect(DebugStoryStorage.save_story).not.toHaveBeenCalled()
+          it 'should not call StoryStorage#save_story', ->
+            expect(StoryStorage.save_story).not.toHaveBeenCalled()
 
           it 'should compile $scope.graph from $scope.story.nodes', ->
             expect(DebugParser.compile_graph).not.toHaveBeenCalled()

@@ -1,6 +1,6 @@
 DebugParser = new window.Yarn.DebugParser()
 
-class DebugStory
+class Story
   constructor: (@id = 'yarn-' + _.uuid(), @title = 'My New Story', @nodes = {}) ->
 
   # Public Methods
@@ -35,11 +35,11 @@ class DebugStory
 
   # Class Methods
   @from_json: (id, json_object) ->
-    return new DebugStory(id, json_object.title, json_object.nodes)
+    return new Story(id, json_object.title, json_object.nodes)
 
 
 
-class DebugStoryStorage
+class StoryStorage
   constructor: (@storage, @parser) ->
 
   # Public Methods
@@ -64,10 +64,10 @@ class DebugStoryStorage
 
   _load_story: (id) ->
     try
-      return DebugStory.from_json(id,
+      return Story.from_json(id,
         JSON.parse(@storage.getItem(id)))
     catch error
       throw "Error parsing story with id=#{id}: #{error}\n"
 
-window.DebugStory = DebugStory
-window.DebugStoryStorage = DebugStoryStorage
+window.Story = Story
+window.StoryStorage = StoryStorage
