@@ -94,19 +94,25 @@ describe 'DebugEditorApp', ->
           $scope.new_node = new_node 
 
         it 'should call $scope.story.add_node', ->
-          spyOn($scope.story, 'add_node').and.returnValue(false)
+          spyOn($scope.story, 'add_node')
           $scope.add_node_to_story($scope.new_node.id, $scope.new_node.text)
-          expect($scope.story.add_node).toHaveBeenCalledWith($scope.new_node.id, $scope.new_node.text)
+          expect($scope.story.add_node).toHaveBeenCalledWith(new_node.id, new_node.text)
 
-        describe 'if $scope.story.add_node returns false', ->
-          it 'should not set $scope.new_node to an empty object', ->
-            spyOn($scope.story, 'add_node').and.returnValue(false)
+        describe 'if $scope.story.add_node throws an error', ->
+          beforeEach ->
+            spyOn(window, 'alert')
+            spyOn($scope.story, 'add_node').and.callFake(-> throw "Error")
             $scope.add_node_to_story($scope.new_node.id, $scope.new_node.text)
+
+          it 'should not set $scope.new_node to an empty object', ->
             expect($scope.new_node).toEqual(new_node)
+
+          it 'should pop open an alert', ->
+            expect(window.alert).toHaveBeenCalled()
 
         describe 'if $scope.story.add_node returns true', ->
           beforeEach ->
-            spyOn($scope.story, 'add_node').and.returnValue(true)
+            spyOn($scope.story, 'add_node')
             $scope.add_node_to_story($scope.new_node.id, $scope.new_node.text)
 
           it 'should set $scope.new_node to an empty object', ->

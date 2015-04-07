@@ -6,10 +6,8 @@ class DebugStory
   # Public Methods
   add_node: (node_id, text) ->
     if @_contains(node_id)
-      alert('Node with this title already exists.')
-      return false
+      throw "Node with title #{node_id} already exists."
     @nodes[node_id] = text
-    return true
 
   to_json: () ->
    return {title: @title, nodes: @nodes}
@@ -38,6 +36,7 @@ class DebugStory
   # Class Methods
   @from_json: (id, json_object) ->
     return new DebugStory(id, json_object.title, json_object.nodes)
+
 
 
 class DebugStoryStorage

@@ -13,19 +13,11 @@ describe 'DebugStory', ->
         expect(story.nodes.test_node).toEqual('test')
 
     describe 'if a node with the node_id of the new node exists', ->
-      beforeEach ->
+      it 'should throw an error, and leave nodes unchanged', ->
         story.nodes = {test_node: 'test'}
-        spyOn(window, 'alert')
-        story.add_node('test_node', 'test2')
-
-      it 'should not add a new node', ->
+        expect(-> story.add_node('test_node', 'test2')).toThrow()
         expect(Object.keys(story.nodes).length).toEqual(1)
-
-      it 'should not alter the node text of the pre-existing node', ->
         expect(story.nodes.test_node).toEqual('test')
-
-      it 'should pop up an alert', ->
-        expect(window.alert).toHaveBeenCalled()
 
   describe '#to_json', ->
     it 'should return plain javascript object in expected format', ->
