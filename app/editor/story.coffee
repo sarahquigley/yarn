@@ -16,6 +16,8 @@ class Story
     @title = title
     return true
 
+  # Returns true if success, a string otherwise
+  # This is required by angular-xeditable's success & error handling
   update_node_id: (node_id, new_node_id) ->
     if node_id == new_node_id
       return true
