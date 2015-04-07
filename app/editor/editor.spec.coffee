@@ -12,8 +12,8 @@ describe 'DebugEditorApp', ->
     $window = undefined
     $routeParams = undefined
     $location = undefined
-    DebugParser = undefined
-    StoryStorage = undefined
+    debugParser = undefined
+    storyStorage = undefined
     setUpDebugEditorCtrl = undefined
 
     beforeEach ->
@@ -28,15 +28,15 @@ describe 'DebugEditorApp', ->
       $location = jasmine.createSpyObj('$location', ['path'])
       $window = jasmine.createSpyObj('$window', ['open'])
 
-      # Mock DebugParser
-      DebugParser = jasmine.createSpyObj('DebugParser', ['compile_graph'])
-      DebugParser.compile_graph.and.callFake((nodes) ->
+      # Mock debugParser
+      debugParser = jasmine.createSpyObj('debugParser', ['compile_graph'])
+      debugParser.compile_graph.and.callFake((nodes) ->
         return new Yarn.Graph(nodes, [])
       )
 
-      # Mock StoryStorage
-      StoryStorage = jasmine.createSpyObj('StoryStorage', ['clear', 'stories', 'save_story'])
-      StoryStorage.stories.and.callFake(() ->
+      # Mock storyStorage
+      storyStorage = jasmine.createSpyObj('storyStorage', ['clear', 'stories', 'save_story'])
+      storyStorage.stories.and.callFake(() ->
         return stories
       )
       
@@ -51,9 +51,9 @@ describe 'DebugEditorApp', ->
             $routeParams: $routeParams,
             $location: $location,
             _: _,
-            DebugParser: DebugParser,
+            debugParser: debugParser,
             Story: Story,
-            StoryStorage: StoryStorage
+            storyStorage: storyStorage
           })
         )
 
@@ -67,8 +67,8 @@ describe 'DebugEditorApp', ->
       beforeEach ->
         setUpDebugEditorCtrl()
         
-      it 'should set $scope.stories by calling StoryStorage.stories', ->
-        expect($scope.stories).toEqual(StoryStorage.stories())
+      it 'should set $scope.stories by calling storyStorage.stories', ->
+        expect($scope.stories).toEqual(storyStorage.stories())
 
       describe 'if $routeParams.id is defined', ->
         it 'should set $scope.story as expected', ->
@@ -140,8 +140,8 @@ describe 'DebugEditorApp', ->
           expect($scope.go_to_story).toHaveBeenCalled()
 
         it 'should compile $scope.graph from $scope.story.nodes', ->
-          expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
-          expect($scope.graph).toEqual(DebugParser.compile_graph())
+          expect(debugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
+          expect($scope.graph).toEqual(debugParser.compile_graph())
 
       describe '.clear_stories', ->
         beforeEach ->
@@ -157,8 +157,8 @@ describe 'DebugEditorApp', ->
         it 'should call $scope.go_to_story', ->
           expect($scope.go_to_story).toHaveBeenCalled()
 
-        it 'should call StoryStorage#clear', ->
-          expect(StoryStorage.clear).toHaveBeenCalled()
+        it 'should call storyStorage#clear', ->
+          expect(storyStorage.clear).toHaveBeenCalled()
 
       describe '.has_stories', ->
         it 'should return true if $scope.stories is not empty', ->
@@ -173,20 +173,20 @@ describe 'DebugEditorApp', ->
           beforeEach ->
             $scope.$apply()
 
-          it 'should call StoryStorage#save_story', ->
-            expect(StoryStorage.save_story).toHaveBeenCalledWith($scope.story)
+          it 'should call storyStorage#save_story', ->
+            expect(storyStorage.save_story).toHaveBeenCalledWith($scope.story)
 
           it 'should compile $scope.graph from $scope.story.nodes', ->
-            expect(DebugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
-            expect($scope.graph).toEqual(DebugParser.compile_graph())
+            expect(debugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
+            expect($scope.graph).toEqual(debugParser.compile_graph())
 
         describe 'if $scope.story is not defined', ->
           beforeEach ->
             $scope.story = undefined
             $scope.$apply()
 
-          it 'should not call StoryStorage#save_story', ->
-            expect(StoryStorage.save_story).not.toHaveBeenCalled()
+          it 'should not call storyStorage#save_story', ->
+            expect(storyStorage.save_story).not.toHaveBeenCalled()
 
           it 'should compile $scope.graph from $scope.story.nodes', ->
-            expect(DebugParser.compile_graph).not.toHaveBeenCalled()
+            expect(debugParser.compile_graph).not.toHaveBeenCalled()

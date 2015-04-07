@@ -28,22 +28,22 @@ angular.module('DebugEditorApp', [
 
 .factory('_', -> _)
 
-.service('DebugParser', Yarn.DebugParser)
+.service('debugParser', Yarn.DebugParser)
 
 .factory('Story', -> Story)
 
-.factory('StoryStorage',
-['localStorage', 'DebugParser',
-(localStorage, DebugParser) ->
-  return new StoryStorage(localStorage, DebugParser)
+.factory('storyStorage',
+['localStorage', 'debugParser',
+(localStorage, debugParser) ->
+  return new StoryStorage(localStorage, debugParser)
 ])
 
 .controller('DebugEditorCtrl',
-['$scope', '$window', '$routeParams', '$location', '_', 'DebugParser', 'Story', 'StoryStorage',
-($scope, $window, $routeParams, $location, _, DebugParser, Story, StoryStorage) ->
+['$scope', '$window', '$routeParams', '$location', '_', 'debugParser', 'Story', 'storyStorage',
+($scope, $window, $routeParams, $location, _, debugParser, Story, storyStorage) ->
 
   # Load all stories
-  $scope.stories = StoryStorage.stories()
+  $scope.stories = storyStorage.stories()
 
   # If viewing a story, set story
   if $routeParams.id
@@ -58,7 +58,7 @@ angular.module('DebugEditorApp', [
     $scope.story = new Story()
     $scope.go_to_story()
     $scope.stories[$scope.story.id] = $scope.story
-    $scope.graph = DebugParser.compile_graph($scope.story.nodes)
+    $scope.graph = debugParser.compile_graph($scope.story.nodes)
 
   $scope.add_node_to_story = (node_id, node_text='') ->
     try
@@ -75,7 +75,7 @@ angular.module('DebugEditorApp', [
     $scope.stories = {}
     $scope.story = undefined
     $scope.go_to_story()
-    StoryStorage.clear()
+    storyStorage.clear()
 
   $scope.has_stories = ->
     return !_.isEmpty($scope.stories)
@@ -83,7 +83,7 @@ angular.module('DebugEditorApp', [
   # Watch $scope.story
   $scope.$watch('story', ->
       if $scope.story
-        StoryStorage.save_story($scope.story)
-        $scope.graph = DebugParser.compile_graph($scope.story.nodes)
+        storyStorage.save_story($scope.story)
+        $scope.graph = debugParser.compile_graph($scope.story.nodes)
     , true)
 ])
