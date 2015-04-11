@@ -82,10 +82,10 @@ angular.module('DebugEditorApp', [
 
   $scope.x_edit = (callback, args...) ->
     try
-      console.log('complete')
+      callback(args...)
       return true
     catch error
-      return error
+      return "#{error}"
 
   # Watch $scope.story
   $scope.$watch('story', ->
