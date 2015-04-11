@@ -39,7 +39,7 @@ describe 'DebugEditorApp', ->
       storyStorage.stories.and.callFake(() ->
         return stories
       )
-      
+
       # setUp method to make DebugEditorCtrl's $scope available for testing
       setUpDebugEditorCtrl = ->
         inject(($rootScope, $controller, _) ->
@@ -58,15 +58,15 @@ describe 'DebugEditorApp', ->
         )
 
     describe 'if $routeParams.id is not defined', ->
-      it 'should not set $scope.story', -> 
-        $routeParams = {} 
+      it 'should not set $scope.story', ->
+        $routeParams = {}
         setUpDebugEditorCtrl()
         expect($scope.story).toBeUndefined()
 
     describe 'setting up DebugEditorCtrl', ->
       beforeEach ->
         setUpDebugEditorCtrl()
-        
+
       it 'should set $scope.stories by calling storyStorage.stories', ->
         expect($scope.stories).toEqual(storyStorage.stories())
 
@@ -91,7 +91,7 @@ describe 'DebugEditorApp', ->
 
         beforeEach ->
           new_node = {id: 'Test Node', text: 'Test text'}
-          $scope.new_node = new_node 
+          $scope.new_node = new_node
 
         it 'should call $scope.story.add_node', ->
           spyOn($scope.story, 'add_node')
@@ -167,6 +167,28 @@ describe 'DebugEditorApp', ->
         it 'should return false if $scope.stories is empty', ->
           $scope.stories = {}
           expect($scope.has_stories()).toBe(false)
+
+      describe '.x_edit', ->
+        callback = undefined
+
+        describe 'if an error is not thrown', ->
+          result = undefined
+
+          beforeEach ->
+            callback = jasmine.createSpy()
+            result = $scope.x_edit(callback, false, 'test')
+
+          it 'should call the passed callback with all passed args', ->
+            expect(callback).toHaveBeenCalledWith(false, 'test')
+
+          it 'should return true', ->
+            expect(result).toBe(true)
+
+        describe 'if an error is thrown', ->
+          it 'should catch it and return the error message string', ->
+            callback = jasmine.createSpy().and.throwError('error')
+            result = $scope.x_edit(callback, true)
+            expect(result).toEqual('Error: error')
 
       describe 'watches $scope.story', ->
         describe 'if $scope.story is defined', ->

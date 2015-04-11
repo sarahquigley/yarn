@@ -39,19 +39,13 @@ describe 'Story', ->
         expect(story.nodes.my_test_node).toEqual('test')
 
     describe 'if a node with the new node_id exists', ->
-      result = undefined
-
       beforeEach ->
         story.nodes = {test_node: 'test', test_node_2: 'test2'}
-        result = story.update_node_id('test_node_2', 'test_node')
 
-      it 'should return a string (error string for x-editable)', ->
-        expect(result).toEqual(jasmine.any(String))
-
-      it 'should not update the node_id of the specified node', ->
+      it 'should throw an error and leave nodes unchanged', ->
+        expect(-> story.update_node_id('test_node_2', 'test_node')).toThrow()
         expect(story.nodes.test_node).toEqual('test')
         expect(story.nodes.test_node_2).toEqual('test2')
-
 
   describe '#update_node_text', ->
     it 'should update the text of the specified node', ->
@@ -59,11 +53,39 @@ describe 'Story', ->
       story.update_node_text('test_node', 'test')
       expect(story.nodes.test_node).toEqual('test')
 
+  describe 'equals', ->
+    other_story = undefined
+
+    beforeEach ->
+      story.nodes = {test_node: 'test', test_node_2: 'test2'}
+      other_story = new Story(story.id, story.title, story.nodes)
+
+    it 'should return true if story equals other story it is compared to', ->
+      expect(story.equals(other_story)).toBe(true)
+
+    it 'should return false if other story\'s is node of class story', ->
+      other_story = {id: story.id, title: story.title, nodes: story.nodes}
+      expect(story.equals(other_story)).toBe(false)
+
+    it 'should return false if other story\'s title is different', ->
+      other_story.title = 'Cloned title'
+      expect(story.equals(other_story)).toBe(false)
+
+    it 'should return false if other story\'s id is different', ->
+      other_story.id = 'Cloned id'
+      expect(story.equals(other_story)).toBe(false)
+
+    it 'should return false if other story\'s nodes different', ->
+      other_story = _.cloneDeep(story)
+      other_story.nodes = {test_node: 'test2', test_node_2: 'test'}
+      expect(story.equals(other_story)).toBe(false)
+
+
   describe '.from_json', ->
     it 'should correctly construct a Story from a story_id and the jsonified story', ->
       story_from_json = Story.from_json(story.id, story.to_json())
       expect(story_from_json).toEqual(jasmine.any(Story))
-      expect(_.isEqual(story_from_json, story)).toBe(true)
+      expect(story_from_json.equals(story)).toBe(true)
 
 
 describe 'StoryStorage', ->
@@ -117,5 +139,5 @@ describe 'StoryStorage', ->
     it 'should return an object containing all stories in storage as Story objects, using their ids as keys', ->
       stories = story_storage.stories()
       expect(_.keys(stories).length).toEqual(2)
-      expect(_.isEqual(stories[story1.id], story1)).toBe(true)
-      expect(_.isEqual(stories[story2.id], story2)).toBe(true)
+      expect(stories[story1.id].equals(story1)).toBe(true)
+      expect(stories[story2.id].equals(story2)).toBe(true)
