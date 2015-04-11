@@ -4,32 +4,26 @@ class Story
   constructor: (@id = 'yarn-' + _.uuid(), @title = 'My New Story', @nodes = {}) ->
 
   # Public Methods
-  add_node: (node_id, text) ->
+  add_node: (node_id, text) =>
     if @_contains(node_id)
       throw "Node with title #{node_id} already exists."
     @nodes[node_id] = text
 
-  to_json: () ->
+  to_json: () =>
    return {title: @title, nodes: @nodes}
 
-  update_title: (title) ->
+  update_title: (title) =>
     @title = title
-    return true
 
-  # Returns true if success, a string otherwise
-  # This is required by angular-xeditable's success & error handling
-  update_node_id: (node_id, new_node_id) ->
-    if node_id == new_node_id
-      return true
-    if @_contains(new_node_id)
-      return 'Node with this title already exists.'
-    @nodes[new_node_id] = @nodes[node_id]
-    delete @nodes[node_id]
-    return true
+  update_node_id: (node_id, new_node_id) =>
+    if @_contains(new_node_id) && node_id != new_node_id
+      throw "Node with title #{node_id} already exists."
+    unless node_id == new_node_id
+      @nodes[new_node_id] = @nodes[node_id]
+      delete @nodes[node_id]
 
-  update_node_text: (node_id, node_text) ->
+  update_node_text: (node_id, node_text) =>
     @nodes[node_id] = node_text
-    return true
 
   # Private Methods
   _contains: (node_id) ->

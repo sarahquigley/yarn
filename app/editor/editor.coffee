@@ -80,6 +80,13 @@ angular.module('DebugEditorApp', [
   $scope.has_stories = ->
     return !_.isEmpty($scope.stories)
 
+  $scope.x_edit = (callback, args...) ->
+    try
+      console.log('complete')
+      return true
+    catch error
+      return error
+
   # Watch $scope.story
   $scope.$watch('story', ->
       if $scope.story

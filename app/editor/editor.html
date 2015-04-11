@@ -29,7 +29,7 @@
   <div ng-show="story">
     <h2>
       Editing story:
-      <a name="{{ story.title }}" editable-text="story.title" onbeforesave="story.update_title($data)">
+      <a name="{{ story.title }}" editable-text="story.title" onbeforesave="x_edit(story.update_title, $data)">
         {{ story.title }}
       </a>
     </h2>
@@ -64,11 +64,11 @@
 
       <div>
         <h3>
-          <a name="{{ node_id }}" editable-text="node_id" onbeforesave="story.update_node_id(node_id, $data)">
+          <a name="{{ node_id }}" editable-text="node_id" onbeforesave="x_edit(story.update_node_id, node_id, $data)">
             {{ node_id }}
           </a>
         </h3>
-        <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="story.update_node_text(node_id, $data)">
+        <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="x_edit(story.update_node_text, node_id, $data)">
           <pre>{{ text }}</pre>
         </a>
       </div>
