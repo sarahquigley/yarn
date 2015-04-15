@@ -24,11 +24,6 @@ class Story
   update_node_text: (node_id, node_text) =>
     @nodes[node_id] = node_text
 
-  equals: (other_story) ->
-    result = other_story instanceof Story
-    result = result && @id == other_story.id && @title == other_story.title
-    return result && _.isEqual(@nodes, other_story.nodes)
-
   # Private Methods
   _contains: (node_id) ->
     return _.contains(_.keys(@nodes), node_id)
