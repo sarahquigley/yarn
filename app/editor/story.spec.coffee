@@ -25,9 +25,9 @@ describe 'Story', ->
       story.nodes = {test_node: 'test', test_node_2: 'test2'}
       expect(story.to_json()).toEqual({title: story.title, nodes: story.nodes})
 
-  describe '#update_title', ->
-    it 'should update the story\'s title to the specified value', ->
-      story.update_title('Test title')
+  describe '#set_title', ->
+    it 'should set the story\'s title to the specified value', ->
+      story.set_title('Test title')
       expect(story.title).toEqual('Test title')
 
   describe '#update_node_id', ->

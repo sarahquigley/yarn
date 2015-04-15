@@ -12,8 +12,7 @@ class Story
   to_json: () =>
    return {title: @title, nodes: @nodes}
 
-  update_title: (title) =>
-    @title = title
+  set_title: (@title) =>
 
   update_node_id: (node_id, new_node_id) =>
     if @_contains(new_node_id) && node_id != new_node_id
@@ -37,8 +36,6 @@ class Story
   # Class Methods
   @from_json: (id, json_object) ->
     return new Story(id, json_object.title, json_object.nodes)
-
-
 
 class StoryStorage
   constructor: (@storage, @parser) ->

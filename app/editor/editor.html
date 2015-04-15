@@ -29,7 +29,7 @@
   <div ng-show="story">
     <h2>
       Editing story:
-      <a name="{{ story.title }}" editable-text="story.title" onbeforesave="x_edit(story.update_title, $data)">
+      <a name="{{ story.title }}" editable-text="story.title" onbeforesave="x_edit(story.set_title, $data)">
         {{ story.title }}
       </a>
     </h2>
