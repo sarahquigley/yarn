@@ -10,59 +10,7 @@
 
   <body ng-app="DebugEditorApp">
 
-    <div ng-controller="DebugEditorCtrl as debugEditor" class="container">
-
-      <h1>Yarn Debug Editor</h1>
-      <p>Add a node. Edit a node.</p>
-
-      <div>
-        <form>
-          <div class="form-group">
-            <input ng-model="new_node.node_id" class="form-control" placeholder="Node title"/>
-          </div>
-          <div class="form-group">
-            <textarea ng-model="new_node.text" class="form-control" placeholder="Node text"></textarea>
-          </div>
-          <button type="submit" ng-click="add_node(new_node.node_id, new_node.text)" class="btn btn-primary">Add A Node</button>
-        </form>
-      </div>
-
-      <div ng-repeat="(node_id, text) in nodes" class="row">
-
-        <div class="col-xs-12">
-          <h2>
-            <a name="{{ node_id }}" editable-text="node_id" onbeforesave="update_node_id(node_id, $data)">
-              {{ node_id }}
-            </a>
-          </h2>
-          <a href="#" editable-textarea="text" e-rows="6" e-cols="40" onbeforesave="update_node_text(node_id, $data)">
-            <pre>{{ text }}</pre>
-          </a>
-        </div>
-
-        <div ng-repeat="edge in graph.edges_by_node(node_id)" class="col-xs-12">
-          Edges:
-          <a href="#{{ edge.destination }}">{{ edge.destination }}</a>
-        </div>
-
-      </div>
-
-      <button type="submit" class="btn btn-primary"
-          ng-click="save_story()">
-        Save
-      </button>
-
-      <button type="submit" class="btn btn-primary"
-          ng-click="launch_story()">
-        Play Story
-      </button>
-
-      <button type="submit" class="btn btn-primary"
-          ng-click="new_story()">
-        Clear Story
-      </button>
-
-    </div>
+    <div ng-view></div>
 
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -70,6 +18,8 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/undermore/bin/undermore.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <!-- endbower -->
 
     <script type="text/javascript" src="main.js"></script>
