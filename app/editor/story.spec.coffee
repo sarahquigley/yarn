@@ -29,6 +29,15 @@ describe 'Story and StoryStorage', ->
           expect(Object.keys(story.nodes).length).toEqual(1)
           expect(story.nodes.test_node).toEqual('test')
 
+    describe '#delete_node', ->
+      it 'should remove specified node from the story\'s nodes array', ->
+        story.nodes = {test_node: 'test'}
+        story.delete_node('test_node')
+        expect(story.nodes.test_node).toBeUndefined()
+
+      it 'should throw an error if specified node does not exist', ->
+        expect(-> story.delete_node('test_node')).toThrow()
+
     describe '#to_json', ->
       it 'should return plain javascript object in expected format', ->
         story.title = 'Test Story'
@@ -62,6 +71,14 @@ describe 'Story and StoryStorage', ->
         story.nodes.test_node = ''
         story.update_node_text('test_node', 'test')
         expect(story.nodes.test_node).toEqual('test')
+
+    describe 'has_nodes', ->
+      it 'should return true if the story has nodes', ->
+        expect(story.has_nodes()).toBe(false)
+
+      it 'should return false if the story has no nodes', ->
+        story.nodes = {test_node: 'test'}
+        expect(story.has_nodes()).toBe(true)
 
     describe '.from_json', ->
       it 'should correctly construct a Story from a story_id and the jsonified story', ->
