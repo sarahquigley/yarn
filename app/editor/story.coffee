@@ -9,7 +9,12 @@ class Story
       throw "Node with title #{node_id} already exists."
     @nodes[node_id] = text
 
-  to_json: () =>
+  delete_node: (node_id) =>
+    if !@_contains(node_id)
+      throw "Node with title #{node_id} does not exist."
+    delete @nodes[node_id]
+
+  to_json: =>
    return {title: @title, nodes: @nodes}
 
   set_title: (@title) =>
@@ -24,12 +29,15 @@ class Story
   update_node_text: (node_id, node_text) =>
     @nodes[node_id] = node_text
 
+  has_nodes: =>
+    return !_.isEmpty(@nodes)
+
   # Private Methods
-  _contains: (node_id) ->
+  _contains: (node_id) =>
     return _.contains(_.keys(@nodes), node_id)
 
   # Class Methods
-  @from_json: (id, json_object) ->
+  @from_json: (id, json_object) =>
     return new Story(id, json_object.title, json_object.nodes)
 
 class StoryStorage
