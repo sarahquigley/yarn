@@ -58,9 +58,9 @@
 
     <hr/>
 
-    <div ng-repeat="(node_id, text) in story.nodes">
+    <h2 ng-if="story.has_nodes()">Edit story nodes:</h2>
 
-      <h2>Edit story nodes:</h2>
+    <div ng-repeat="(node_id, text) in story.nodes">
 
       <div>
         <h3>
@@ -78,7 +78,18 @@
         <a href="#{{ edge.destination }}">{{ edge.destination }}</a>
       </div>
 
+      <br/>
+
+      <div>
+        <button type="button" class="btn btn-primary"
+          ng-click="story.delete_node(node_id)">
+          Delete Node
+        </button>
+      </div>
+
     </div>
   </div>
+
+  <br/>
 
 </div>
