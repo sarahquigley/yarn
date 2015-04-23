@@ -49,8 +49,8 @@ angular.module('DebugEditorApp', [
   if $routeParams.id
     $scope.story = $scope.stories[$routeParams.id]
 
-  # Debug Editor Methods
-  $scope.go_to_story = () ->
+  # Debug Editor $scope Methods
+  $scope.go_to_story = ->
     story_id = if $scope.story then $scope.story.id else ''
     $location.path('/stories/' + story_id)
 
@@ -64,6 +64,14 @@ angular.module('DebugEditorApp', [
     try
       $scope.story.add_node(node_id, node_text)
       $scope.new_node = {}
+
+      $scope.graph = debugParser.compile_graph($scope.story.nodes)
+      edges = $scope.graph.edges_by_node(node_id)
+      for edge in edges
+        try
+          $scope.story.add_node(edge.destination, '')
+        catch error
+
     catch error
       alert(error)
 
