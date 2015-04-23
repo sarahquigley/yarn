@@ -2,7 +2,7 @@ class Edge
   constructor: (@source, @destination) ->
 
 class Graph
-  constructor: (@nodes = {}, @edges = {}) ->
+  constructor: (@nodes = {}, @edges = []) ->
     # TODO: some validation of the types!
     #
     # @nodes: dict of {node_id: node_text}
