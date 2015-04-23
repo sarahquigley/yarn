@@ -111,8 +111,6 @@ describe 'DebugEditorApp', ->
             expect(window.alert).toHaveBeenCalled()
 
         describe 'if $scope.story.add_node returns true', ->
-          edges = undefined
-
           beforeEach ->
             edges = [
               new Yarn.Edge('source1', 'destination1'),
