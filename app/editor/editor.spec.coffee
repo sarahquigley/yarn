@@ -86,17 +86,51 @@ describe 'DebugEditorApp', ->
             $scope.go_to_story()
             expect($location.path).toHaveBeenCalledWith('/stories/')
 
+      describe '.update_node_text', ->
+        node = undefined
+
+        beforeEach ->
+          edges = [
+            new Yarn.Edge('source1', 'destination1'),
+            new Yarn.Edge('source1', 'destination2')
+          ]
+
+          debugParser.compile_graph.and.callFake((nodes) ->
+            graph = new Yarn.Graph(nodes, [])
+            spyOn(graph, 'edges_by_node').and.returnValue(edges)
+            return graph
+          )
+
+          spyOn($scope.story, 'update_node_text')
+          spyOn($scope.story, 'add_node')
+          node = {id: 'Test node', text: 'Test text'}
+          $scope.update_node_text(node.id, node.text)
+
+        it 'should call $scope.story.add_node', ->
+          expect($scope.story.update_node_text).toHaveBeenCalledWith(node.id, node.text)
+
+        it 'should call debugParser.compile_graph', ->
+          expect(debugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
+
+        it 'should call $scope.graph.edges_by_node', ->
+          expect($scope.graph.edges_by_node).toHaveBeenCalledWith(node.id)
+
+        it 'should call $scope.story.add_node once for every edge in the new node', ->
+          expect($scope.story.add_node).toHaveBeenCalledWith('destination1', '')
+          expect($scope.story.add_node).toHaveBeenCalledWith('destination2', '')
+
       describe '.add_node_to_story', ->
         new_node = undefined
 
         beforeEach ->
+          spyOn($scope, 'update_node_text')
           new_node = {id: 'Test Node', text: 'Test text'}
           $scope.new_node = new_node
 
         it 'should call $scope.story.add_node', ->
           spyOn($scope.story, 'add_node')
           $scope.add_node_to_story($scope.new_node.id, $scope.new_node.text)
-          expect($scope.story.add_node).toHaveBeenCalledWith(new_node.id, new_node.text)
+          expect($scope.story.add_node).toHaveBeenCalledWith(new_node.id, '')
 
         describe 'if $scope.story.add_node throws an error', ->
           beforeEach ->
@@ -107,37 +141,21 @@ describe 'DebugEditorApp', ->
           it 'should not set $scope.new_node to an empty object', ->
             expect($scope.new_node).toEqual(new_node)
 
+          it 'should not call $scope.update_node_text', ->
+            expect($scope.update_node_text).not.toHaveBeenCalled()
+
           it 'should pop open an alert', ->
             expect(window.alert).toHaveBeenCalled()
 
         describe 'if $scope.story.add_node returns true', ->
           beforeEach ->
-            edges = [
-              new Yarn.Edge('source1', 'destination1'),
-              new Yarn.Edge('source1', 'destination2')
-            ]
-
-            debugParser.compile_graph.and.callFake((nodes) ->
-              graph = new Yarn.Graph(nodes, [])
-              spyOn(graph, 'edges_by_node').and.returnValue(edges)
-              return graph
-            )
-
-            spyOn($scope.story, 'add_node')
             $scope.add_node_to_story($scope.new_node.id, $scope.new_node.text)
 
           it 'should set $scope.new_node to an empty object', ->
             expect($scope.new_node).toEqual({})
 
-          it 'should call debugParser.compile_graph', ->
-            expect(debugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
-
-          it 'should call $scope.graph.edges_by_node', ->
-            expect($scope.graph.edges_by_node).toHaveBeenCalledWith(new_node.id)
-
-          it 'should call $scope.story.add_node once for every edge in the new node', ->
-            expect($scope.story.add_node).toHaveBeenCalledWith('destination1', '')
-            expect($scope.story.add_node).toHaveBeenCalledWith('destination2', '')
+          it 'should call $scope.update_node_text', ->
+            expect($scope.update_node_text).toHaveBeenCalledWith(new_node.id, new_node.text)
 
       describe '.launch_story', ->
         it 'should play the story in a new window', ->
