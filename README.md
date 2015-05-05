@@ -1,4 +1,5 @@
 # yarn
+
 A tool for creating interactive fiction
 
 ## Installing dependencies
@@ -98,4 +99,3 @@ Command: `grunt --test` or `grunt serve --test`
 This task runs a single run of unit tests, and outputs the result to the console.
 
 Command: `grunt test`
->>>>>>> remotes/angular-skeleton/master
