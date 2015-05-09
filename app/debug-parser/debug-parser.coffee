@@ -2,7 +2,7 @@ Edge = Yarn.Edge
 Parser = Yarn.Parser
 
 class DebugParser extends Parser
-  compile_edges: (nodes) ->
+  compile_edges: (nodes) =>
     brace_regex = /\[[^[]+\]/g
     edges = []
     _.each nodes, (text, source_node_id) ->
@@ -14,7 +14,7 @@ class DebugParser extends Parser
 
     return edges
 
-  compile_page: (nodes) ->
+  compile_page: (nodes) =>
     page = ''
     for title, text of nodes
       node_template = """
