@@ -180,7 +180,7 @@ describe 'DebugEditorApp', ->
 
         it 'should compile $scope.graph from $scope.story.nodes', ->
           expect(debugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
-          expect($scope.graph).toEqual(debugParser.compile_graph())
+          expect(_.isEqualIgnoringFxn($scope.graph, debugParser.compile_graph())).toBe(true)
 
       describe '.clear_stories', ->
         beforeEach ->
@@ -239,7 +239,7 @@ describe 'DebugEditorApp', ->
 
           it 'should compile $scope.graph from $scope.story.nodes', ->
             expect(debugParser.compile_graph).toHaveBeenCalledWith($scope.story.nodes)
-            expect($scope.graph).toEqual(debugParser.compile_graph())
+            expect(_.isEqualIgnoringFxn($scope.graph, debugParser.compile_graph())).toBe(true)
 
         describe 'if $scope.story is not defined', ->
           beforeEach ->
