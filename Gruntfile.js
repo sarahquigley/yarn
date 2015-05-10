@@ -9,7 +9,8 @@ module.exports = function(grunt) {
   var config = {
     dirs: {
       app: 'app',
-      dev: '.dev'
+      dev: '.dev',
+      build: 'build',
     },
     files: {
       scripts: [
@@ -29,11 +30,27 @@ module.exports = function(grunt) {
 
     config: config,
 
+    // Autoprefixer tasks   - add browser specific prefixes to css
+    // autoprefixer:build   - add browser specific prefixes to css in temporary .dev directory
+    autoprefixer: {
+      options: {
+        browsers: ['last 2 versions']
+      },
+      dev: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.dirs.dev %>/styles/',
+          src: '**/*.css',
+          dest: '<%= config.dirs.dev %>/styles/'
+        }]
+      }
+    },
+
     // Clean tasks    - For erasing contents of specified directories
     // clean:dev      - Clean temporary directory created for holding compiled files during development
     clean: {
       dev: [config.dirs.dev],
-      test: [config.dirs.test]
+      build: [config.dirs.build],
     },
 
     // Coffee tasks   - Coffeescript compilation
@@ -82,6 +99,65 @@ module.exports = function(grunt) {
       }
     },
 
+    // Copy task      - Copy files from one directory to another
+    // copy:build     - Copy files from app directory to build directory during build process
+    copy: {
+      build: {
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: '<%= config.dirs.app %>',
+            dest: '<%= config.dirs.build %>',
+            src: [
+              '*.html',
+              '*/**/*.html',
+              '!bower_components/**/*.html',
+            ]
+          }
+        ]
+      }
+    },
+
+    // Filerev tasks    - Rename files for browser caching purposes
+    // filerev:build    - Filerev tasks used during build process
+    filerev: {
+      build: {
+        src: [
+          '<%= config.dirs.build %>/scripts/{,*/}*.js',
+          '<%= config.dirs.build %>/styles/{,*/}*.css',
+        ]
+      }
+    },
+
+    // gh-pages task    - Push build to the gh-pages branch.
+    'gh-pages': {
+      options: {
+        base: '<%= config.dirs.build %>',
+      },
+      src: ['**']
+    },
+
+    // Htmlmin tasks    - Minify html files
+    // htmlmin:build    - Minify html files during build process
+    htmlmin: {
+      build: {
+        options: {
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          collapseBooleanAttributes: true,
+          removeCommentsFromCDATA: true,
+          removeOptionalTags: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= config.dirs.build %>',
+          src: ['*.html', '*/**/*.html'],
+          dest: '<%= config.dirs.build %>'
+        }]
+      }
+    },
+
     // Karma - test runner
     // karma:concurrent   - Run test in the background
     // karma:single       - Run tests once
@@ -110,6 +186,38 @@ module.exports = function(grunt) {
           dest: '<%= config.dirs.dev %>/styles',
           ext: '.css'
         }]
+      }
+    },
+
+    // UseminPrepare tasks  - Reads HTML for usemin blocks to enable smart builds that automatically
+    //                        concat, minify and revision files. Creates configurations in memory so
+    //                        additional tasks can operate on them
+    // useminPrepare:build  - UseminPrepare task for build process
+    useminPrepare: {
+      build: {
+        src: ['<%= config.dirs.app %>/index.html'],
+        options: {
+          staging: '<%= config.dirs.dev %>',
+          dest: '<%= config.dirs.build %>',
+          flow: {
+            steps: {
+              js: ['concat', 'uglifyjs'],
+              css: ['cssmin']
+            },
+            post: {}
+          }
+        }
+      }
+    },
+
+    // Usemin tasks         - Performs rewrites based on filerev and the useminPrepare configuration
+    // usemin:html          - Usemin task for .html files
+    // usemin:css          - Usemin task for .css files
+    usemin: {
+      html: ['<%= config.dirs.build %>/**/*.html'],
+      css: ['<%= config.dirs.build %>/styles/**/*.css'],
+      options: {
+        assetsDirs: ['<%= config.dirs.build %>']
       }
     },
 
@@ -196,7 +304,41 @@ module.exports = function(grunt) {
     ]);
   });
 
-  // serve          - Compile site assets, serve site
+  // build                    - Build app, ready for deployment
+  //    [--no-install-deps]   - Skip dependency installation.
+  grunt.registerTask('build', 'Build, ready for deployment', function(){
+    if(! grunt.option('no-install-deps')){
+      grunt.task.run([
+        'npm-install',
+      ]);
+    }
+
+    grunt.task.run([
+      'clean:dev',
+      'coffee:dev',
+      'sass:dev',
+      'autoprefixer:dev',
+      'wiredep:dev',
+      'clean:build',
+      'useminPrepare',
+      'concat',
+      'copy:build',
+      'cssmin',
+      'uglify',
+      'filerev',
+      'usemin',
+      'htmlmin',
+    ]);
+  });
+
+  grunt.registerTask('deploy', 'Build app, deploy to gh-pages branch', function(){
+    grunt.task.run([
+      'build',
+      'gh-pages',
+    ]);
+  });
+
+  // serve                    - Compile site assets, serve site
   //    [--test]              - run unit tests concurrently
   //    [--no-install-deps]   - Skip dependency installation.
   grunt.registerTask('serve', 'Compile, serve, optionally run tests', function(){
@@ -210,6 +352,7 @@ module.exports = function(grunt) {
       'clean:dev',
       'coffee:dev',
       'sass:dev',
+      'autoprefixer:dev',
       'wiredep:dev',
       'connect:livereload'
     ]);
