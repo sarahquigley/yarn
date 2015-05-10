@@ -13,6 +13,7 @@ module.exports = function(config){
       'app/bower_components/bootstrap/dist/js/bootstrap.js',
       'app/bower_components/undermore/bin/undermore.js',
       'app/bower_components/angular-route/angular-route.js',
+      'app/bower_components/lodash-extensions/build/lodash-extensions.js',
       // endbower
       'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/mock-localstorage/lib/mock-localstorage.js',

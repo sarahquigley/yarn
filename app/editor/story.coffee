@@ -44,26 +44,26 @@ class StoryStorage
   constructor: (@storage, @parser) ->
 
   # Public Methods
-  clear: ->
+  clear: =>
     for key in _.keys(@storage)
       @storage.removeItem(key) if _.startsWith(key, 'yarn-')
 
-  save_story: (story) ->
+  save_story: (story) =>
     @storage.setItem(story.id, JSON.stringify(story.to_json()))
     @storage.setItem(story.id + '-story', @parser.compile_page(story.nodes))
 
-  stories: ->
+  stories: =>
     stories = {}
     for id in @_story_ids()
       stories[id] = @_load_story(id)
     return stories
 
   # Private Methods
-  _story_ids: ->
+  _story_ids: =>
     return _.filter _.keys(@storage), (key) ->
       return _.startsWith(key, 'yarn-') && !_.endsWith(key, '-story')
 
-  _load_story: (id) ->
+  _load_story: (id) =>
     try
       return Story.from_json(id,
         JSON.parse(@storage.getItem(id)))
