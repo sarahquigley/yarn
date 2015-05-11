@@ -114,6 +114,15 @@ module.exports = function(grunt) {
               '*/**/*.html',
               '!bower_components/**/*.html',
             ]
+          },
+          {
+            expand: true,
+            dot: true,
+            cwd: '<%= config.dirs.app %>/bower_components/bootstrap/',
+            dest: '<%= config.dirs.build %>',
+            src: [
+              'fonts/**/*',
+            ]
           }
         ]
       }
@@ -172,6 +181,19 @@ module.exports = function(grunt) {
       // Run tests once
       single: {
         singleRun: true
+      }
+    },
+
+    // ng-annotate tries to make the code safe for minification automatically
+    // by using the Angular long form for dependency injection.
+    ngAnnotate: {
+      build: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.dirs.dev %>/concat/scripts',
+          src: ['*.js'],
+          dest: '<%= config.dirs.dev %>/concat/scripts'
+        }]
       }
     },
 
@@ -323,6 +345,7 @@ module.exports = function(grunt) {
       'useminPrepare',
       'concat',
       'copy:build',
+      'ngAnnotate',
       'cssmin',
       'uglify',
       'filerev',
