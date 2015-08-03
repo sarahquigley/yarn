@@ -31,7 +31,7 @@ module.exports = function(grunt) {
     config: config,
 
     // Autoprefixer tasks   - add browser specific prefixes to css
-    // autoprefixer:build   - add browser specific prefixes to css in temporary .dev directory
+    // autoprefixer:dev     - add browser specific prefixes to css in temporary .dev directory
     autoprefixer: {
       options: {
         browsers: ['last 2 versions']
@@ -48,6 +48,7 @@ module.exports = function(grunt) {
 
     // Clean tasks    - For erasing contents of specified directories
     // clean:dev      - Clean temporary directory created for holding compiled files during development
+    // clean:build    - Clean build directory created for holding built files used for deployment
     clean: {
       dev: [config.dirs.dev],
       build: [config.dirs.build],
@@ -255,16 +256,22 @@ module.exports = function(grunt) {
 
       wiredep: {
         files: ['bower.json'],
-        tasks: ['wiredep:dev', 'wiredep:test']
+        tasks: [
+          'wiredep:dev',
+          'wiredep:test',
+        ]
       }
     },
 
     // Wiredep tasks    - Inject bower dependencies automatically into source code
-    // wiredep:dev      - Inject bower dependencies into html pages
+    // wiredep:dev      - Inject bower dependencies into html pages and scss files
     // wiredep:test     - Inject bower dependencies into karma config
     wiredep: {
       dev: {
-        src: ['<%= config.dirs.app %>/index.html']
+        src: [
+          '<%= config.dirs.app %>/index.html',
+          '<%= config.dirs.app %>/styles/main.scss',
+        ]
       },
 
       test:{
@@ -316,9 +323,9 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:dev',
       'coffee:dev',
+      'wiredep:dev',
       'sass:dev',
       'autoprefixer:dev',
-      'wiredep:dev',
       'clean:build',
       'useminPrepare',
       'concat',
@@ -331,6 +338,7 @@ module.exports = function(grunt) {
     ]);
   });
 
+  // deploy                    - Build app, deploy to gh-pages branch on Github
   grunt.registerTask('deploy', 'Build app, deploy to gh-pages branch', function(){
     grunt.task.run([
       'build',
@@ -351,9 +359,9 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:dev',
       'coffee:dev',
+      'wiredep:dev',
       'sass:dev',
       'autoprefixer:dev',
-      'wiredep:dev',
       'connect:livereload'
     ]);
 
